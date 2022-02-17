@@ -1,44 +1,72 @@
 <?php
 
+/**
+ * Created by Reliese Model.
+ */
+
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 
-class User extends Authenticatable
+/**
+ * Class User
+ * 
+ * @property int $id
+ * @property int $group_id
+ * @property string $first_name
+ * @property string $last_name
+ * @property string $patronymic
+ * @property string $email
+ * @property string $password
+ * 
+ * @property Group $group
+ * @property Collection|Bank[] $banks
+ * @property Collection|Discipline[] $disciplines
+ * @property Collection|UserTest[] $user_tests
+ *
+ * @package App\Models
+ */
+class User extends Model
 {
-    use HasApiTokens, HasFactory, Notifiable;
+	protected $table = 'users';
+	public $timestamps = false;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
-    protected $fillable = [
-        'name',
-        'email',
-        'password',
-    ];
+	protected $casts = [
+		'group_id' => 'int'
+	];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
+	protected $hidden = [
+		'password'
+	];
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-    ];
+	protected $fillable = [
+		'group_id',
+		'first_name',
+		'last_name',
+		'patronymic',
+		'email',
+		'password'
+	];
+
+	public function group()
+	{
+		return $this->belongsTo(Group::class);
+	}
+
+	public function banks()
+	{
+		return $this->hasMany(Bank::class);
+	}
+
+	public function disciplines()
+	{
+		return $this->belongsToMany(Discipline::class)
+					->withPivot('id');
+	}
+
+	public function user_tests()
+	{
+		return $this->hasMany(UserTest::class);
+	}
 }

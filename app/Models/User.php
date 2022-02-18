@@ -67,6 +67,11 @@ class User extends Authenticatable
 		return $this->hasMany(Bank::class);
 	}
 
+    public function categories()
+	{
+		return $this->hasMany(Category::class);
+	}
+
 	public function disciplines()
 	{
 		return $this->belongsToMany(Discipline::class)

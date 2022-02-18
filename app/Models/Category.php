@@ -11,10 +11,10 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class Category
- * 
+ *
  * @property int $id
  * @property string $name
- * 
+ *
  * @property Collection|Section[] $sections
  * @property Collection|Question[] $questions
  *
@@ -24,6 +24,10 @@ class Category extends Model
 {
 	protected $table = 'categories';
 	public $timestamps = false;
+
+    protected $casts = [
+        'user_id' => 'int'
+    ];
 
 	protected $fillable = [
 		'name'
@@ -39,4 +43,9 @@ class Category extends Model
 	{
 		return $this->hasMany(Question::class);
 	}
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

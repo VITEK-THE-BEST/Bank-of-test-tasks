@@ -16,10 +16,10 @@ return new class extends Migration
         Schema::create('bank_discipline', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('discipline_id')->nullable()->default(null);
-            $table->foreign('discipline_id')->references('id')->on('disciplines');
+            $table->foreign('discipline_id')->references('id')->on('disciplines')->cascadeOnDelete();
 
             $table->unsignedBigInteger('bank_id');
-            $table->foreign('bank_id')->references('id')->on('banks');
+            $table->foreign('bank_id')->references('id')->on('banks')->cascadeOnDelete();
         });
     }
 

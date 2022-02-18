@@ -45,7 +45,7 @@ class BankController extends Controller
      *
      * то что закинул, то и обновится
      */
-    public function update(Request $request,Bank $id)
+    public function update(Request $request, Bank $id)
     {
         $validate = $request->validate([
             'name' => 'sometimes|string',
@@ -56,18 +56,15 @@ class BankController extends Controller
         $id->update($validate);
         return response()->json([]);
     }
+
     /**
      * Удалить банк
+     *
+     * при удалении, дропнуться и разделы
      */
-    public function delete(Request $request,Bank $id)
+    public function delete(Bank $id)
     {
-        $validate = $request->validate([
-            'name' => 'sometimes|string',
-            'start_testing' => 'sometimes|date',
-            'end_testing' => 'sometimes|date',
-        ]);
-
-        $id->update($validate);
+        $id->delete();
         return response()->json([]);
     }
 }

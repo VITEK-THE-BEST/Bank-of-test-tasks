@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Group;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -99,12 +100,15 @@ class UserController extends Controller
     public function update(Request $request)
     {
         $validate = $request->validate([
-            'address_id' => 'sometimes',
-            'phone' => 'sometimes',
-            'name' => 'sometimes',
-            'first_name' => 'sometimes',
-            'last_name' => 'sometimes',
+            'group' => 'sometimes|exists:name|string',
+            'first_name' => 'required',
+            'last_name' => 'required',
+            'patronymic' => 'sometimes',
+            'email' => 'sometimes|unique',
         ]);
+        if(array_key_exists('group',$validate)){
+            $validate['group_id'] = Group::query()->where('name',$validate['group'])->get();
+        }
 
         auth()->user()->update($validate);
         return response()->json(["success" => true]);

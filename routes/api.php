@@ -22,18 +22,13 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::middleware(['api', 'auth:sanctum'])->group(function () {
 
     Route::group(['prefix' => 'user'], function () {
-        Route::controller(UserController::class)->group( function () {
-
+        Route::controller(UserController::class)->group(function () {
             Route::get('/me', 'me');
             Route::delete('/dropToken', 'dropToken');
             Route::patch('/update', 'update');
             Route::delete('/delete/{id}', 'delete');
         });
     });
-
-
-
-
 
 
 });

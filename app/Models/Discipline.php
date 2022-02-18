@@ -11,10 +11,10 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class Discipline
- * 
+ *
  * @property int $id
  * @property string $name
- * 
+ *
  * @property Collection|Bank[] $banks
  * @property Collection|User[] $users
  *
@@ -31,7 +31,8 @@ class Discipline extends Model
 
 	public function banks()
 	{
-		return $this->hasMany(Bank::class);
+        return $this->belongsToMany(Bank::class)
+            ->withPivot('id');
 	}
 
 	public function users()

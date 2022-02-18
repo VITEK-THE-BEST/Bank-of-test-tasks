@@ -12,14 +12,14 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class Bank
- * 
+ *
  * @property int $id
  * @property int $user_id
  * @property int|null $discipline_id
  * @property string $name
  * @property Carbon $start_testing
  * @property Carbon $end_testing
- * 
+ *
  * @property Discipline|null $discipline
  * @property User $user
  * @property Collection|Section[] $sections
@@ -50,9 +50,10 @@ class Bank extends Model
 		'end_testing'
 	];
 
-	public function discipline()
+	public function disciplines()
 	{
-		return $this->belongsTo(Discipline::class);
+		return $this->belongsToMany(Discipline::class)
+            ->withPivot('id');
 	}
 
 	public function user()

@@ -10,3 +10,8 @@
 - php artisan migrate:fresh --seed
 
 
+# usage libs:
+
+- sanctum
+- Laravel-Backpack/PermissionManager
+- spatie/laravel-permission

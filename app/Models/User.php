@@ -8,6 +8,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -33,7 +35,9 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 class User extends Authenticatable
 {
     use HasRoles,CrudTrait;
-	protected $table = 'users';
+    use HasApiTokens, Notifiable;
+
+    protected $table = 'users';
 	public $timestamps = false;
 
 	protected $casts = [

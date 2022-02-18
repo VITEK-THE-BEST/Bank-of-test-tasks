@@ -8,10 +8,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Permission\Traits\HasRoles;
+use Backpack\CRUD\app\Models\Traits\CrudTrait;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
 /**
  * Class User
- * 
+ *
  * @property int $id
  * @property int $group_id
  * @property string $first_name
@@ -19,7 +22,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $patronymic
  * @property string $email
  * @property string $password
- * 
+ *
  * @property Group $group
  * @property Collection|Bank[] $banks
  * @property Collection|Discipline[] $disciplines
@@ -27,8 +30,9 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @package App\Models
  */
-class User extends Model
+class User extends Authenticatable
 {
+    use HasRoles,CrudTrait;
 	protected $table = 'users';
 	public $timestamps = false;
 

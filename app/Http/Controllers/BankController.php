@@ -36,14 +36,15 @@ class BankController extends Controller
      */
     public function show()
     {
-        Bank::query()->where('user_id', auth()->id());
-        return response()->json([]);
+        $bank = Bank::query()->where('user_id', auth()->id());
+        return response()->json($bank);
     }
 
     /**
      * Обновить данные банка
      *
      * то что закинул, то и обновится
+     * @urlParam Bank id
      */
     public function update(Request $request, Bank $id)
     {
@@ -61,6 +62,8 @@ class BankController extends Controller
      * Удалить банк
      *
      * при удалении, дропнуться и разделы
+     *
+     * @urlParam Bank id
      */
     public function delete(Bank $id)
     {

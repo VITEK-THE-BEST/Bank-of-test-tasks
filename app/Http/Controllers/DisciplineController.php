@@ -71,7 +71,7 @@ class DisciplineController extends Controller
     }
 
     /**
-     * Удаление дисциплины
+     * Обновление дисциплины
      *
      *
      * @urlParam id дисциплина

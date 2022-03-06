@@ -11,14 +11,14 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class UserTest
- * 
+ *
  * @property int $id
  * @property int $user_id
  * @property int $bank_id
  * @property float $assessment
  * @property array $result
  * @property Carbon $testing_time
- * 
+ *
  * @property Bank $bank
  * @property User $user
  *
@@ -33,7 +33,7 @@ class UserTest extends Model
 		'user_id' => 'int',
 		'bank_id' => 'int',
 		'assessment' => 'float',
-		'result' => 'json'
+		'result' => 'array'
 	];
 
 	protected $dates = [

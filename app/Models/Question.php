@@ -10,11 +10,11 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class Question
- * 
+ *
  * @property int $id
  * @property int $category_id
  * @property int $type_question_id
- * 
+ *
  * @property Category $category
  * @property TypeQuestion $type_question
  *
@@ -27,12 +27,18 @@ class Question extends Model
 
 	protected $casts = [
 		'category_id' => 'int',
-		'type_question_id' => 'int'
+        'type_question_id' => 'int',
+		'question' => 'string',
+		'answer' => 'json',
+		'opinions' => 'json',
 	];
 
 	protected $fillable = [
 		'category_id',
-		'type_question_id'
+		'type_question_id',
+        'question',
+        'answer',
+        'opinions',
 	];
 
 	public function category()

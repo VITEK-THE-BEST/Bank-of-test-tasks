@@ -22,27 +22,28 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Category extends Model
 {
-	protected $table = 'categories';
-	public $timestamps = false;
+    protected $table = 'categories';
+    public $timestamps = false;
 
     protected $casts = [
         'user_id' => 'int'
     ];
 
-	protected $fillable = [
-		'name'
-	];
+    protected $fillable = [
+        'name',
+        'user_id'
+    ];
 
-	public function sections()
-	{
-		return $this->belongsToMany(Section::class)
-					->withPivot('id');
-	}
+    public function sections()
+    {
+        return $this->belongsToMany(Section::class)
+            ->withPivot('id');
+    }
 
-	public function questions()
-	{
-		return $this->hasMany(Question::class);
-	}
+    public function questions()
+    {
+        return $this->hasMany(Question::class);
+    }
 
     public function user()
     {

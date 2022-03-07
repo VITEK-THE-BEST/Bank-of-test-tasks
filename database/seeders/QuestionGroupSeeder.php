@@ -17,8 +17,14 @@ class QuestionGroupSeeder extends Seeder
     {
         QuestionGroup::insert(
             ['name' => "Открытых"],
+        );
+        QuestionGroup::insert(
             ['name' => "Закрытых"],
+        );
+        QuestionGroup::insert(
             ['name' => "На соответствие"],
+        );
+        QuestionGroup::insert(
             ['name' => "На упорядочивание"],
         );
     }

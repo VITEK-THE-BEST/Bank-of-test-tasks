@@ -17,30 +17,31 @@ use Illuminate\Http\Request;
 class QuestionController extends Controller
 {
     /**
-     * !Создание вопроса
+     * Создание вопроса
      * @urlParam Category id
      */
-    public function create(Request $request, Category $id)
+    public function create(Request $request, Category $category)
     {
         $validate = $request->validate([
-            'type_question_id' => 'required',
+            'type_question_id' => 'required|integer',
             'question' => 'required',
-            'answer' => 'sometimes',
-            'opinions' => 'sometimes',
+            'answer' => 'sometimes|array',
+            'opinions' => 'sometimes|array',
         ]);
-        $validate['category_id'] = $id->id;
+        $validate['category_id'] = $category->id;
 
-        Question::query()->create($validate);
-        return response()->json([]);
+        $question = Question::query()->create($validate);
+        return response()->json($question);
     }
 
     /**
-     * !Обновление вопроса
-     * @urlParam Category id
+     * Обновление вопроса
+     *
+     * @urlParam Question id
      *
      * что отправишь то и обновится
      */
-    public function update(Request $request, Question $id)
+    public function update(Request $request, Question $question)
     {
         $validate = $request->validate([
             'type_question_id' => 'sometimes',
@@ -49,28 +50,28 @@ class QuestionController extends Controller
             'opinions' => 'sometimes',
         ]);
 
-        $id->update($validate);
+        $question->update($validate);
         return response()->json([]);
     }
 
     /**
-     * !Удалить вопрос
+     * Удалить вопрос
      * @urlParam Question id
      */
-    public function delete(Question $id)
+    public function delete(Question $question)
     {
-        $id->delete();
+        $question->delete();
         return response()->json([]);
     }
 
     /**
-     * !получить вопросы по категории
+     * получить вопросы по категории
      * @urlParam Category id
      */
-    public function show(Category $id)
+    public function show(Category $category)
     {
         $questions = question::query()
-            ->where('category_id', $id->id)
+            ->where('category_id', $category->id)
             ->get();
 
         return response()->json($questions);
@@ -84,7 +85,7 @@ class QuestionController extends Controller
      *
      * НАГАВНИЛ ПИЗДЕЦ, НАДО БЛЯТЬ ПЕРЕДЕЛАТЬ ВСЕ НАХУЙ
      */
-    public function count(Category $id)
+    public function count(Category $category)
     {
 
 //        $questions = question::select('type_question_id')->where('category_id', $validated['category_id'])->get();
@@ -102,12 +103,12 @@ class QuestionController extends Controller
     }
 
     /**
-     * !получить 1 вопрос по id
+     * получить 1 вопрос по id
      * @urlParam Question id
      */
-    public function take(Question $id)
+    public function take(Question $question)
     {
-        return response()->json($id);
+        return response()->json($question);
     }
 
 }

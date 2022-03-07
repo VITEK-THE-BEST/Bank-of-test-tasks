@@ -33,10 +33,10 @@ class DisciplineController extends Controller
      *
      * @urlParam id дисциплина
      */
-    public function addUsers(Request $request,Discipline $id)
+    public function addUsers(Request $request, Discipline $id)
     {
         $validate = $request->validate([
-            'user_array' => 'required',
+            'user_array' => 'required|array',
         ]);
 
         $users = User::query()->findOrFail($validate['user_array']);
@@ -45,23 +45,24 @@ class DisciplineController extends Controller
         return response()->json([]);
     }
 
+
     /**
-     * !Добавление банка в дисциплину
+     * Добавление банка в дисциплину
      *
      *
-     * @urlParam discipline дисциплина
-     * @urlParam bank банк
+     * @urlParam discipline id
+     * @urlParam bank id
      */
     public function addBank(Discipline $discipline,Bank $bank)
     {
-        $discipline->banks()->attach($bank);
+        $discipline->banks()->syncWithoutDetaching([$bank->id]);
         return response()->json([]);
     }
 
     /**
      * Удаление дисциплины
      *
-     *
+     * при удалении дисцпилины, так-же удаляется связь между банком и пользователями
      * @urlParam id дисциплина
      */
     public function delete(Discipline $id)
@@ -76,7 +77,7 @@ class DisciplineController extends Controller
      *
      * @urlParam id дисциплина
      */
-    public function update(Request $request,Discipline $id)
+    public function update(Request $request, Discipline $id)
     {
         $validate = $request->validate([
             "name" => "required",
@@ -84,6 +85,7 @@ class DisciplineController extends Controller
         $id->update($validate);
         return response()->json([]);
     }
+
     /**
      * !Дисциплины
      *

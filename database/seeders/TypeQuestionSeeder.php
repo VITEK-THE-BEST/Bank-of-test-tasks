@@ -19,18 +19,24 @@ class TypeQuestionSeeder extends Seeder
             [
                 'question_group_id' => 1,
                 "name" => "1 тип вопроса"
-            ],
+            ]
+        );
+        TypeQuestion::insert(
             [
                 'question_group_id' => 2,
                 'name' => "2 тип вопроса"
             ],
+        );
+        TypeQuestion::insert(
             [
                 'question_group_id' => 3,
                 'name' => "3 тип вопроса"
-            ],
+            ]
+        );
+        TypeQuestion::insert(
             [
                 'question_group_id' => 4,
-                'name' => "3 тип вопроса"
+                'name' => "4 тип вопроса"
             ],
         );
     }

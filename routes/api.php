@@ -21,10 +21,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
-
 /**
  * @unauthenticated
  */
@@ -44,14 +40,6 @@ Route::middleware(['api', 'auth:sanctum'])->group(function () {
         Route::delete('/delete/{id}', [UserController::class, 'delete']);
     });
 
-    Route::group(['prefix' => 'discipline'], function () {
-        Route::post('/create', [DisciplineController::class, 'create']);
-        Route::post('/addUsers/{id}', [DisciplineController::class, 'addUsers']);
-        Route::post('/addBank/{id}/{id}', [DisciplineController::class, 'addBank']);
-        Route::delete('/delete/{id}', [DisciplineController::class, 'delete']);
-        Route::put('/update/{id}', [DisciplineController::class, 'update']);
-    });
-
     Route::group(['prefix' => 'bank'], function () {
         Route::post('/create', [BankController::class, 'create']);
         Route::get('/show', [BankController::class, 'show']);
@@ -59,29 +47,37 @@ Route::middleware(['api', 'auth:sanctum'])->group(function () {
         Route::delete('/delete/{id}', [BankController::class, 'delete']);
     });
 
+    Route::group(['prefix' => 'discipline'], function () {
+        Route::post('/create', [DisciplineController::class, 'create']);
+        Route::post('/addUsers/{id}', [DisciplineController::class, 'addUsers']);
+        Route::get('/addBank/{discipline}/bank/{bank}', [DisciplineController::class, 'addBank']);
+        Route::delete('/delete/{id}', [DisciplineController::class, 'delete']);
+        Route::put('/update/{id}', [DisciplineController::class, 'update']);
+    });
+
     Route::group(['prefix' => 'section'], function () {
-        Route::post('/create/{id}', [SectionController::class, 'create']);
-        Route::get('/show/{id}', [SectionController::class, 'show']);
-        Route::put('/update/{id}', [SectionController::class, 'update']);
-        Route::delete('/delete/{id}', [SectionController::class, 'delete']);
-        Route::post('/createCategory/{id}/{id}', [SectionController::class, 'createCategory']);
-        Route::post('/deleteCategory/{id}/{id}', [SectionController::class, 'deleteCategory']);
+        Route::post('/create/{bank}', [SectionController::class, 'create']);
+        Route::get('/show/{bank}', [SectionController::class, 'show']);
+        Route::put('/update/{section}', [SectionController::class, 'update']);
+        Route::delete('/delete/{section}', [SectionController::class, 'delete']);
+        Route::post('/createCategory/{section}/category/{category}', [SectionController::class, 'createCategory']);
+        Route::post('/deleteCategory/{section}/category/{category}', [SectionController::class, 'deleteCategory']);
         Route::post('/showNotCategory', [SectionController::class, 'showNotCategory']);
-        Route::post('/showCategory/{id}', [SectionController::class, 'showNotCategory']);
+        Route::post('/showCategory/{section}', [SectionController::class, 'showCategory']);
     });
     Route::group(['prefix' => 'category'], function () {
         Route::post('/create', [CategoryController::class, 'create']);
+        Route::put('/update/{category}', [CategoryController::class, 'update']);
+        Route::delete('/delete/{сategory}', [CategoryController::class, 'delete']);
         Route::get('/show', [CategoryController::class, 'show']);
-        Route::put('/update/{id}', [CategoryController::class, 'update']);
-        Route::delete('/delete/{id}', [CategoryController::class, 'delete']);
     });
 
     Route::group(['prefix' => 'question'], function () {
-        Route::post('/create/{id}', [QuestionController::class, 'create']);
-        Route::put('/update/{id}', [QuestionController::class, 'update']);
-        Route::delete('/delete/{id}', [QuestionController::class, 'delete']);
-        Route::get('/show/{id}', [QuestionController::class, 'show']);
-        Route::get('/count/{id}', [QuestionController::class, 'count']);
-        Route::get('/take/{id}', [QuestionController::class, 'take']);
+        Route::post('/create/category/{category}', [QuestionController::class, 'create']);
+        Route::put('/update/{question}', [QuestionController::class, 'update']);
+        Route::delete('/delete/{question}', [QuestionController::class, 'delete']);
+        Route::get('/show/{category}', [QuestionController::class, 'show']);
+        Route::get('/count/{category}', [QuestionController::class, 'count']);
+        Route::get('/take/{question}', [QuestionController::class, 'take']);
     });
 });

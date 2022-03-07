@@ -15,7 +15,7 @@ use Illuminate\Http\Request;
 class CategoryController extends Controller
 {
     /**
-     * !Создание категории
+     * Создание категории
      */
     public function create(Request $request)
     {
@@ -33,26 +33,26 @@ class CategoryController extends Controller
      *
      * @urlParam Category id
      */
-    public function update(Request $request, Category $id)
+    public function update(Request $request, Category $category)
     {
         $validate = $request->validate([
             'name' => 'sometimes|string',
         ]);
 
-        $id->update($validate);
+        $category->update($validate);
         return response()->json([]);
     }
 
     /**
-     * Удалить банк
+     * !Удалить категорию
      *
      * при удалении, должно дропнуться и связь в таблице многие ко многим
      *
      * @urlParam Category id
      */
-    public function delete(Category $id)
+    public function delete(Category $сategory)
     {
-        $id->delete();
+        $сategory->delete();
         return response()->json([]);
     }
 

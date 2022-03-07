@@ -20,12 +20,12 @@ class SectionController extends Controller
      * !Создание раздела
      * @urlParam Bank id
      */
-    public function create(Request $request, Bank $id)
+    public function create(Request $request, Bank $bank)
     {
         $validate = $request->validate([
             'name' => 'required|string',
         ]);
-        $validate['bank_id'] = $id->id;
+        $validate['bank_id'] = $bank->id;
 
         Section::query()->create($validate);
         return response()->json([]);
@@ -38,43 +38,41 @@ class SectionController extends Controller
      *
      * @urlParam Bank id
      */
-    public function show(Bank $id)
+    public function show(Bank $bank)
     {
-        $section = Section::query()->where('bank_id', $id->id);
-        return response()->json($section);
+        return response()->json($bank->sections);
     }
 
     /**
-     * Обновить данные раздела
+     * Обновить название раздела
      *
      * то что закинул, то и обновится
      * @urlParam Section id
      */
-    public function update(Request $request, Section $id)
+    public function update(Request $request, Section $section)
     {
         $validate = $request->validate([
             'name' => 'sometimes|string',
         ]);
 
-
-        $id->update($validate);
+        $section->update($validate);
         return response()->json([]);
     }
 
     /**
-     * Удалить Раздел
+     * !Удалить Раздел
      *
      * при удалении, ВРОДЕ КАК ДОЛЖНО ДРОПНУТЬСЯ И СВЯЗЬ С КАТЕГОРИЕЙ, НО НЕ САМА КАТЕГОРИЯ
      * @urlParam Section id
      */
-    public function delete(Section $id)
+    public function delete(Section $section)
     {
-        $id->delete();
+        $section->delete();
         return response()->json([]);
     }
 
     /**
-     * !Добавить к разделам категории
+     * Добавить к разделу категорию
      *
      * Связь многие ко многим
      * @urlParam Section id
@@ -82,13 +80,13 @@ class SectionController extends Controller
      */
     public function createCategory(Section $section, Category $category)
     {
-        $section->categories()->attach($category);
+        $section->categories()->syncWithoutDetaching($category);
 
         return response()->json([]);
     }
 
     /**
-     * !Удалить категорию из раздела
+     * Удалить категорию из раздела
      *
      * Связь многие ко многим
      * @urlParam Section id
@@ -102,7 +100,7 @@ class SectionController extends Controller
     }
 
     /**
-     * !!показать все категории которые не относятся к разделу и в соседних разделах
+     * !!!!!показать все категории которые не относятся к разделу и в соседних разделах пользователя
      *
      * !НЕ РАБОТАЕТ !
      */
@@ -137,14 +135,7 @@ class SectionController extends Controller
      */
     public function showCategory(Section $section)
     {
-        $categories = $section->categories;
-
-        foreach ($categories as $category) {
-            unset($category['pivot']);
-        }
-
-        return response()->json(["categories" => $categories]);
+        return response()->json($section->categories()->get());
     }
-
 
 }

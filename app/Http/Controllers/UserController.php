@@ -33,7 +33,7 @@ class UserController extends Controller
         $user = User::query()->create($validate);
         $token = $user->createToken($request['email'])->plainTextToken;
 
-        return response()->json(["user" => $user, "token" => $token ], 200);
+        return response()->json(["user" => $user, "token" => $token ]);
 
     }
 
@@ -42,7 +42,6 @@ class UserController extends Controller
      */
     public function getToken(Request $request)
     {
-
         $request->validate([
             'email' => 'required',
             'password' => 'required',
@@ -92,14 +91,16 @@ class UserController extends Controller
     public function update(Request $request)
     {
         $validate = $request->validate([
-            'group' => 'sometimes|exists:name|string',
-            'first_name' => 'required',
-            'last_name' => 'required',
+            'group' => 'sometimes|exists:groups,name|string',
+            'first_name' => 'sometimes',
+            'last_name' => 'sometimes',
             'patronymic' => 'sometimes',
-            'email' => 'sometimes|unique',
+            'email' => 'sometimes|unique:users',
         ]);
         if (array_key_exists('group', $validate)) {
-            $validate['group_id'] = Group::query()->where('name', $validate['group'])->get();
+            $validate['group_id'] = Group::query()
+                ->where('name', $validate['group'])
+                ->get()[0]['id'];
         }
 
         auth()->user()->update($validate);
@@ -109,6 +110,8 @@ class UserController extends Controller
 
     /**
      * Удалить пользователя
+     *
+     * @urlParam id
      */
     public function delete($id)
     {

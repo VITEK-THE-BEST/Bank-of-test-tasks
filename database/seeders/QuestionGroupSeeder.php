@@ -15,11 +15,11 @@ class QuestionGroupSeeder extends Seeder
      */
     public function run()
     {
-        QuestionGroup::inseart([
+        QuestionGroup::insert(
             ['name' => "Открытых"],
             ['name' => "Закрытых"],
             ['name' => "На соответствие"],
             ['name' => "На упорядочивание"],
-        ]);
+        );
     }
 }

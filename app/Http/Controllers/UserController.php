@@ -24,24 +24,17 @@ class UserController extends Controller
             'first_name' => 'required',
             'last_name' => 'required',
             'patronymic' => 'sometimes',
-            'email' => 'required|unique',
+            'email' => 'required|email|unique:users',
             'password' => 'required',
         ]);
 
-        $CheckUserEmail = User::all('email')->where('email', $request['email']);
-        if ($CheckUserEmail->isEmpty()) {
-            $validate['password'] = Hash::make($validate['password']);
+        $validate['password'] = Hash::make($validate['password']);
 
-            $user = User::query()->create($validate);
-            $token = $user->createToken($request['email'])->plainTextToken;
+        $user = User::query()->create($validate);
+        $token = $user->createToken($request['email'])->plainTextToken;
 
-            return response()->json(["success" => true,
-                "user" => $user,
-                "token" => $token], 200);
+        return response()->json(["user" => $user, "token" => $token ], 200);
 
-        }
-        return response()->json(["success" => false,
-            "error" => "Данный Email уже зарегестрирован"], 409);
     }
 
     /**
@@ -88,7 +81,7 @@ class UserController extends Controller
     {
         auth()->user()->currentAccessToken()->delete();
 
-        return response()->json(["success" => true]);
+        return response()->json([]);
     }
 
     /**
@@ -105,12 +98,12 @@ class UserController extends Controller
             'patronymic' => 'sometimes',
             'email' => 'sometimes|unique',
         ]);
-        if(array_key_exists('group',$validate)){
-            $validate['group_id'] = Group::query()->where('name',$validate['group'])->get();
+        if (array_key_exists('group', $validate)) {
+            $validate['group_id'] = Group::query()->where('name', $validate['group'])->get();
         }
 
         auth()->user()->update($validate);
-        return response()->json(["success" => true]);
+        return response()->json([]);
     }
 
 
@@ -121,6 +114,6 @@ class UserController extends Controller
     {
         $user = User::query()->find($id);
         $user->delete();
-        return response()->json(["success" => true]);
+        return response()->json([]);
     }
 }

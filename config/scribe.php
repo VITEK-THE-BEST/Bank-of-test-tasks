@@ -87,7 +87,7 @@ return [
                      * API calls will be made only for routes in this group matching these HTTP methods (GET, POST, etc).
                      * List the methods here or use '*' to mean all methods. Leave empty to disable API calls.
                      */
-                    'methods' => ['GET','POST','PUT','DELETE'],
+                    'methods' => ['*'],
 
                     /*
                      * Laravel config variables which should be set for the API call.
@@ -98,6 +98,8 @@ return [
                     'config' => [
                         'app.env' => 'documentation',
                         // 'app.debug' => false,
+                        'app.debug' => false,
+
                     ],
 
                     /*

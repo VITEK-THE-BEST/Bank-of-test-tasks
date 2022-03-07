@@ -16,3 +16,4 @@ yarn-error.log
 /.scribe
 public/packages/
 public/vendor/scribe
+resources/views/scribe

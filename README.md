@@ -1,4 +1,5 @@
-# банк тестовых заданий
+# CreaTest 
+for Ugra State University
 
 ## установка проекта
 
@@ -12,7 +13,7 @@
 ### update documentation
 - php artisan scribe:generate
 
-
+ you can see [documentation](https://app.swaggerhub.com/apis/VITEK-THE-BEST/CreaTest)
 # usage libs:
 
 - sanctum

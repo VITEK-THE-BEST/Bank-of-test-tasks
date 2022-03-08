@@ -27,3 +27,4 @@ requirements:
 - [Laravel-Backpack/PermissionManager](https://github.com/Laravel-Backpack/PermissionManager)
 - [spatie/laravel-permission](https://github.com/spatie/laravel-permission)
 - [knuckleswtf/scribe](https://github.com/knuckleswtf/scribe)
+- [reliese/laravel](https://github.com/reliese/laravel)

@@ -100,32 +100,26 @@ class SectionController extends Controller
     }
 
     /**
-     * !!!!!показать все категории которые не относятся к разделу и в соседних разделах пользователя
+     * показать все категории которые не относятся к разделу и в соседних разделах пользователя
      *
-     * !НЕ РАБОТАЕТ !
+     * @urlParam section id
      */
-    public function showNotCategory(Request $request)
+    public function showNotCategory(Section $section)
     {
-//        $categories = Category::all()->where('user_id', '=', auth()->id());
-//
-//        $btz = btz::find($request['btz_id']);
-//        $sections_btz = $btz->sections;
-//
-//        foreach ($sections_btz as $item) {
-//            $section = Section::find($item['id']);
-//            $section_category = $section->categories;//это категории которые относятся к текущему разделу
-//
-//            foreach ($section_category as $section) {
-//                $categories = $categories->filter(function ($category) use ($section) {
-//                    if ($section['pivot']['category_id'] != $category['id']) {
-//                        return $category;
-//                    }
-//                });
-//            }
-//        }
-//
-//        return response()->json(["success" => true,
-//            "categories" => $categories->flatten()]);
+        $user = auth()->user();
+        $userCategories = $user->categories()->get();
+        $categoriesSection = $section
+            ->categories()
+            ->where('user_id', auth()->id())
+            ->get();
+
+
+        foreach ($categoriesSection as $categorySection) {
+            $userCategories = $userCategories->filter(function ($category) use ($categorySection) {
+                return $categorySection['pivot']['category_id'] != $category['id'];
+            });
+        }
+        return response()->json([$userCategories]);
     }
 
     /**

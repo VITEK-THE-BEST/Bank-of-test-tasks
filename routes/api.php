@@ -61,10 +61,10 @@ Route::middleware(['api', 'auth:sanctum'])->group(function () {
         Route::get('/show/{bank}', [SectionController::class, 'show']);
         Route::put('/update/{section}', [SectionController::class, 'update']);
         Route::delete('/delete/{section}', [SectionController::class, 'delete']);
-        Route::post('/createCategory/{section}/category/{category}', [SectionController::class, 'createCategory']);
-        Route::post('/deleteCategory/{section}/category/{category}', [SectionController::class, 'deleteCategory']);
-        Route::post('/showNotCategory', [SectionController::class, 'showNotCategory']);
-        Route::post('/showCategory/{section}', [SectionController::class, 'showCategory']);
+        Route::get('/createCategory/{section}/category/{category}', [SectionController::class, 'createCategory']);
+        Route::delete('/deleteCategory/{section}/category/{category}', [SectionController::class, 'deleteCategory']);
+        Route::post('/showNotCategory/{section}', [SectionController::class, 'showNotCategory']);
+        Route::get('/showCategory/{section}', [SectionController::class, 'showCategory']);
     });
     Route::group(['prefix' => 'category'], function () {
         Route::post('/create', [CategoryController::class, 'create']);

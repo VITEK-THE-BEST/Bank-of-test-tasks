@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
+use App\Models\Group;
 use App\Models\Question;
+use App\Models\QuestionGroup;
+use App\Models\TypeQuestion;
 use Illuminate\Http\Request;
 
 
@@ -78,28 +81,41 @@ class QuestionController extends Controller
     }
 
     /**
-     * !!!!!!!таблица вопросов категории
+     * таблица вопросов в категории
      *
      * получить колличество вопросов и типов вопросов
      * @urlParam Category id
      *
-     * НАГАВНИЛ ПИЗДЕЦ, НАДО БЛЯТЬ ПЕРЕДЕЛАТЬ ВСЕ НАХУЙ
      */
     public function count(Category $category)
     {
+        $categoryQuestions = $category->questions()->get();
 
-//        $questions = question::select('type_question_id')->where('category_id', $validated['category_id'])->get();
-//        $type_question = type_question::all();
-//
-//        $list_types = [];
-//
-//        foreach ($type_question as $item) {
-//            array_push($list_types, ['id' => $item['id'], 'name' => $item['name'], 'count' => $questions->where('type_question_id', $item['id'])->count()]);
-//        }
-//
-//        return response()->json(["success" => true,
-//            "total_count" => count($questions),
-//            "type_count" => $list_types]);
+        $countTypeQuestion = $categoryQuestions->countBy(function ($question) {
+            $typeQroupQuestion = TypeQuestion::query()
+                ->select(['id', 'question_group_id'])
+                ->find($question['type_question_id']);
+
+            return $typeQroupQuestion->question_group['name'];
+        });
+
+        $questionGroup = QuestionGroup::all()->pluck('name');
+
+        //добавляет значение при остуствие типа вопроса
+        foreach ($questionGroup as $item) {
+            $check = false;
+            foreach ($countTypeQuestion as $keyCount => $valueCount) {
+                if ($keyCount == $item) {
+                    $check = true;
+                    break;
+                }
+            }
+            if (!$check) {
+                $countTypeQuestion[$item] = 0;
+            }
+        }
+
+        return response()->json($countTypeQuestion);
     }
 
     /**

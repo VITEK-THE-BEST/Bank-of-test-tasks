@@ -11,11 +11,11 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class Section
- * 
+ *
  * @property int $id
  * @property int $bank_id
  * @property string $name
- * 
+ *
  * @property Bank $bank
  * @property Collection|Category[] $categories
  *
@@ -42,7 +42,7 @@ class Section extends Model
 
 	public function categories()
 	{
-		return $this->belongsToMany(Category::class)
-					->withPivot('id');
+		return $this->belongsToMany(Category::class);
+//					->withPivot('id');
 	}
 }

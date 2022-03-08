@@ -17,3 +17,4 @@ yarn-error.log
 public/packages/
 public/vendor/scribe
 resources/views/scribe
+package-lock.json

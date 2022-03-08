@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 /**
  * @authenticated
- * @group Банк authenticated
+ * @group Банк
  *
  * редактирование банк
  */

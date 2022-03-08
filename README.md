@@ -9,6 +9,9 @@
 ### rebase project
 - php artisan migrate:fresh --seed
 
+### update documentation
+- php artisan scribe:generate
+
 
 # usage libs:
 

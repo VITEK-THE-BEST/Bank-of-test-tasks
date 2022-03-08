@@ -33,7 +33,7 @@ class UserController extends Controller
         $user = User::query()->create($validate);
         $token = $user->createToken($request['email'])->plainTextToken;
 
-        return response()->json(["user" => $user, "token" => $token ]);
+        return response()->json(["user" => $user, "token" => $token]);
 
     }
 

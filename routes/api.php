@@ -6,8 +6,6 @@ use App\Http\Controllers\UserController;
 use \App\Http\Controllers\SectionController;
 use \App\Http\Controllers\QuestionController;
 use \App\Http\Controllers\CategoryController;
-use App\Models\Discipline;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -21,10 +19,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+
+
 /**
  * @unauthenticated
  */
 Route::post('/registration', [UserController::class, 'register']);
+
 /**
  * @unauthenticated
  */

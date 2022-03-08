@@ -53,7 +53,7 @@ class DisciplineController extends Controller
      * @urlParam discipline id
      * @urlParam bank id
      */
-    public function addBank(Discipline $discipline,Bank $bank)
+    public function addBank(Discipline $discipline, Bank $bank)
     {
         $discipline->banks()->syncWithoutDetaching([$bank->id]);
         return response()->json([]);

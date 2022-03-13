@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\BankController;
 use App\Http\Controllers\DisciplineController;
+use App\Http\Controllers\FileLoadController;
 use App\Http\Controllers\UserController;
 use \App\Http\Controllers\SectionController;
 use \App\Http\Controllers\QuestionController;
@@ -18,7 +19,6 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-
 
 
 /**
@@ -80,5 +80,9 @@ Route::middleware(['api', 'auth:sanctum'])->group(function () {
         Route::get('/show/{category}', [QuestionController::class, 'show']);
         Route::get('/count/{category}', [QuestionController::class, 'count']);
         Route::get('/take/{question}', [QuestionController::class, 'take']);
+    });
+
+    Route::group(['prefix' => 'files'], function () {
+        Route::post('/unloadingBank/bank/{bank}', [FileLoadController::class, 'unloadingBank']);
     });
 });

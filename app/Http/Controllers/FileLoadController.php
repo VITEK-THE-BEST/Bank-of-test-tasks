@@ -19,126 +19,159 @@ class FileLoadController extends Controller
      *
      *
      */
-    public function unloadingBank(Bank $bank){
+    public function unloadingBank(Bank $bank)
+    {
+        $bankName = '$CATEGORY: ' . $bank['name'] . '/';
+        $giftFile = [];
 
+
+        foreach ($bank->sections as $section) {
+            foreach ($section->categories as $category) {
+                $CATEGORY_NAME = $bankName . $section['name'] . $category['name'];
+
+                array_push($giftFile, $CATEGORY_NAME . PHP_EOL . PHP_EOL);
+
+                foreach ($category->questions as $question) {
+                    switch ($question['type_question_id']) {
+                        case 1://открытый вопрос (один правильный ответ)
+                            array_push($giftFile, $question['question'] . '{' . PHP_EOL);
+
+                            foreach ($question['opinions'] as $opinion) {
+                                if ($opinion['id'] == $question['answer'][0]) {
+                                    array_push($giftFile, "=" . $opinion['opinion'] . PHP_EOL);
+                                } else {
+                                    array_push($giftFile, "~" . $opinion['opinion'] . PHP_EOL);
+                                }
+                            }
+
+                            array_push($giftFile, '}' . PHP_EOL . PHP_EOL);
+                            break;
+                        case 2: // закрытый вопрос, возможно указать только один вариант на подстановку
+                            foreach ($question['answer'] as $answer) {
+                                $position = strpos($question['question'], "@@");
+                                $question['question'] = substr_replace($question['question'], "{ =" . $answer . " }", $position, 2);
+                            }
+                            array_push($giftFile, $question['question'] . PHP_EOL . PHP_EOL);
+                            break;
+                        case 3:
+
+                    }
+
+//                    return $giftFile;
+//                    return $question;
+                }
+            }
+        }
     }
+
     public function _unloading(Bank $bank)
     {
 
         $file_response = [];
 
         $btz = $bank;
-        if ($btz) {
 
 
-            $categories = $btz->categories; // вернет все категории для бтз
+        $categories = $btz->categories; // вернет все категории для бтз
 
 
-            foreach ($categories as $category) {
+        foreach ($categories as $category) {
 
+            array_push($file_response, '$' . 'CATEGORY: ' . $category['name'] . PHP_EOL . PHP_EOL);
+            $questions = question::all()->where('category_id', $category['id']);
+            foreach ($questions as $question) {
 
-                array_push($file_response, '$' . 'CATEGORY: ' . $category['name'] . PHP_EOL . PHP_EOL);
-                $questions = question::all()->where('category_id', $category['id']);
+                if ($question['type_question_id'] != 2)
+                    array_push($file_response, $question['question'] . '{' . PHP_EOL);
 
-                foreach ($questions as $question) {
+                switch ($question['type_question_id']) {
+                    case 1://открытый вопрос
+                        $opinions = $question['opinions'];
 
-                    if ($question['type_question_id'] != 2)
-                        array_push($file_response, $question['question'] . '{' . PHP_EOL);
+                        for ($i = 0, $count_true = 0; $i < count($question['opinions']); $i++) {
+                            ($opinions[$i]['success'] == true) ? $count_true += 1 : $count_true;
+                        }
 
+                        if ($count_true > 1) {
+                            //правильных ответов больше одного
 
-                    switch ($question['type_question_id']) {
-                        case 1://открытый вопрос
-                            $opinions = $question['opinions'];
+                            $percent_question_true = round(100 / $count_true, 5);
 
-                            for ($i = 0, $count_true = 0; $i < count($question['opinions']); $i++) {
-                                ($opinions[$i]['success'] == true) ? $count_true += 1 : $count_true;
+                            if (count($question['opinions']) != $count_true) {
+                                $percent_question_false = round(100 / (count($question['opinions']) - $count_true), 5);
                             }
 
-                            if ($count_true > 1) {
-                                //правильных ответов больше одного
-
-                                $percent_question_true = round(100 / $count_true, 5);
-
-                                if (count($question['opinions']) != $count_true) {
-                                    $percent_question_false = round(100 / (count($question['opinions']) - $count_true), 5);
-                                }
-
-                                foreach ($opinions as $opinion) {
-
-                                    if ($opinion['success'] == true) {
-                                        array_push($file_response, '~%' . $percent_question_true . '% ' . $opinion['opinion'] . PHP_EOL);
-                                    } else {
-                                        array_push($file_response, '~%-' . $percent_question_false . '% ' . $opinion['opinion'] . PHP_EOL);
-                                    }
-                                }
-
-                            } else {
-                                // если значений одно
-                                foreach ($opinions as $opinion) {
-                                    if ($opinion['success'] != true) {
-                                        array_push($file_response, '~' . $opinion['opinion'] . PHP_EOL);
-                                    } else {
-                                        array_push($file_response, '=' . $opinion['opinion'] . PHP_EOL);
-                                    }
-
-                                }
-                            }
-
-                            array_push($file_response, '}' . PHP_EOL . PHP_EOL);
-
-                            break;
-                        case 2://закрытый вопрос
-                            $opinions = $question['question'];
-
-                            preg_match_all("/@(.*?)@/", $opinions, $res);
-                            $value_replace = ($res[1][0] == '') ? '{' : '{ =';
-
-
-                            $first_position = strpos($opinions, "@");
-                            $opinions = substr_replace($opinions, $value_replace, $first_position, 1);
-
-                            $second_position = strpos($opinions, "@");
-                            $opinions = substr_replace($opinions, "}", $second_position, 1);
-
-                            $add_helper = strstr($opinions, '}', true);
-
-                            foreach ($question['opinions'] as $opinion) {
-                                $add_helper = $add_helper . " =" . $opinion['opinion'];
-                            }
-
-                            $add_helper = $add_helper . ' ' . strstr($opinions, '}');
-                            array_push($file_response, $add_helper . PHP_EOL . PHP_EOL);
-
-                            break;
-                        case 3://на соответсвие
-                            return "_____3";
-                            break;
-                        case 4://на упорядочивание вопрос
-                            $opinions = collect($question['opinions'])->sort();
-
-                            $i = 1;
                             foreach ($opinions as $opinion) {
-                                array_push($file_response, '=' . $i . ' -> ' . $opinion['opinion'] . PHP_EOL);
-                                $i += 1;
-                            }
-                            array_push($file_response, '}' . PHP_EOL . PHP_EOL);
 
-                            break;
-                    }
+                                if ($opinion['success'] == true) {
+                                    array_push($file_response, '~%' . $percent_question_true . '% ' . $opinion['opinion'] . PHP_EOL);
+                                } else {
+                                    array_push($file_response, '~%-' . $percent_question_false . '% ' . $opinion['opinion'] . PHP_EOL);
+                                }
+                            }
+
+                        } else {
+                            // если значений одно
+                            foreach ($opinions as $opinion) {
+                                if ($opinion['success'] != true) {
+                                    array_push($file_response, '~' . $opinion['opinion'] . PHP_EOL);
+                                } else {
+                                    array_push($file_response, '=' . $opinion['opinion'] . PHP_EOL);
+                                }
+
+                            }
+                        }
+
+                        array_push($file_response, '}' . PHP_EOL . PHP_EOL);
+
+                        break;
+                    case 2://закрытый вопрос
+                        $opinions = $question['question'];
+
+                        preg_match_all("/@(.*?)@/", $opinions, $res);
+                        $value_replace = ($res[1][0] == '') ? '{' : '{ =';
+
+
+                        $first_position = strpos($opinions, "@");
+                        $opinions = substr_replace($opinions, $value_replace, $first_position, 1);
+
+                        $second_position = strpos($opinions, "@");
+                        $opinions = substr_replace($opinions, "}", $second_position, 1);
+
+                        $add_helper = strstr($opinions, '}', true);
+
+                        foreach ($question['opinions'] as $opinion) {
+                            $add_helper = $add_helper . " =" . $opinion['opinion'];
+                        }
+
+                        $add_helper = $add_helper . ' ' . strstr($opinions, '}');
+                        array_push($file_response, $add_helper . PHP_EOL . PHP_EOL);
+
+                        break;
+                    case 3://на соответсвие
+                        return "_____3";
+                        break;
+                    case 4://на упорядочивание вопрос
+                        $opinions = collect($question['opinions'])->sort();
+
+                        $i = 1;
+                        foreach ($opinions as $opinion) {
+                            array_push($file_response, '=' . $i . ' -> ' . $opinion['opinion'] . PHP_EOL);
+                            $i += 1;
+                        }
+                        array_push($file_response, '}' . PHP_EOL . PHP_EOL);
+
+                        break;
                 }
             }
-
-            Storage::disk('local')->put('Btz/TEST.txt', $file_response);
-
-            $headers = [
-                'Content-Type' => 'application/txt',
-            ];
-
-            return response()->download('../storage/app/Btz/TEST.txt', $btz['name'] . ".txt", $headers);
         }
-        return response()->json(["success" => false,
-            "error" => "БТЗ не найдено"], 404);
 
+        Storage::disk('local')->put('Btz/TEST.txt', $file_response);
+
+        $headers = [
+            'Content-Type' => 'application/txt',
+        ];
+
+        return response()->download('../storage/app/Btz/TEST.txt', $btz['name'] . ".txt", $headers);
     }
-
 }

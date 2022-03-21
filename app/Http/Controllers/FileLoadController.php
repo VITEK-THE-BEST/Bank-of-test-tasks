@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Bank;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+
 /**
  * @authenticated
  * @group Файлы
@@ -17,7 +18,7 @@ class FileLoadController extends Controller
     /**
      * Выгрузка банка
      *
-     *
+     * Выгружается в формате gift
      */
     public function unloadingBank(Bank $bank)
     {
@@ -89,14 +90,13 @@ class FileLoadController extends Controller
                 }
             }
         }
-//        return $giftFile;
 
-        Storage::disk('local')->put('Btz/TEST.txt', $giftFile);
         $headers = [
             'Content-Type' => 'application/txt',
         ];
-        return response()->download('../storage/app/Btz/TEST.txt', $bank['name'] . ".txt", $headers);
 
+        return response()->streamDownload(function () use ($giftFile) {
+            echo implode('',$giftFile);
+        }, 'laravel-readme.txt',$headers);
     }
-
 }

@@ -27,3 +27,15 @@ requirements:
 - [Laravel-Backpack/PermissionManager](https://github.com/Laravel-Backpack/PermissionManager)
 - [spatie/laravel-permission](https://github.com/spatie/laravel-permission)
 - [knuckleswtf/scribe](https://github.com/knuckleswtf/scribe)
+
+# ДЛЯ НИКИТЫ!!!!!!
+установка проекта 
+- composer i
+- php artisan migrate:fresh --seed
+- php artisan optimize
+
+# Запуск проекта
+если появились изменения в БД
+- php artisan migrate:fresh --seed
+- php artisan optimize
+- php artisan serve

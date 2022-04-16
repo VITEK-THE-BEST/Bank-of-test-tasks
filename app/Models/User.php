@@ -6,6 +6,7 @@
 
 namespace App\Models;
 
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
@@ -13,7 +14,6 @@ use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-
 /**
  * Class User
  *
@@ -41,7 +41,8 @@ class User extends Authenticatable
 	public $timestamps = false;
 
 	protected $casts = [
-		'group_id' => 'int'
+        'email_verified_at' => 'datetime',
+        'group_id' => 'int'
 	];
 
 	protected $hidden = [

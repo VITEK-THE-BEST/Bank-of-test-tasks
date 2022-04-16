@@ -20,8 +20,8 @@ return new class extends Migration
             $table->foreign('user_id')->references('id')->on('users');
 
             $table->string("name");
-            $table->date("start_testing")->default('00.00.00');
-            $table->date("end_testing")->default('00.00.00');
+            $table->date("start_testing")->default('02.02.22');
+            $table->date("end_testing")->default('02.02.22');
         });
     }
 

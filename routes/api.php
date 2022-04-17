@@ -19,10 +19,6 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-Route::get('/test', function (){
-    return redirect()->away('http://127.0.0.1');
-});
-
 
 /**
  * @unauthenticated
@@ -30,14 +26,18 @@ Route::get('/test', function (){
 Route::post('/resend/email/token', [UserController::class, 'resendPin'])
     ->name('resendPin');
 
+/**
+ * @unauthenticated
+ */
+Route::get('/email/{token}/verify/{user}', [UserController::class, 'verifyEmail'])
+    ->name('verifyEmail');
 
-Route::middleware('auth:sanctum')->group(function () {
-    Route::post('/email/verify', [UserController::class, 'verifyEmail']);
-
-    Route::middleware('verify.api')->group(function () {
-        Route::delete('/dropToken', [UserController::class, 'dropToken']);
-    });
-});
+//Route::middleware('auth:sanctum')->group(function () {
+//
+//    Route::middleware('verify.api')->group(function () {
+//        Route::delete('/dropToken', [UserController::class, 'dropToken']);
+//    });
+//});
 
 /**
  * @unauthenticated

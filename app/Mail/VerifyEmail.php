@@ -12,21 +12,21 @@ class VerifyEmail extends Mailable
     use Queueable, SerializesModels;
 
     public $pin;
-    public $email;
+    public $user;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($pin,$email)
+    public function __construct($pin,$user)
     {
         $this->pin=$pin;
-        $this->email=$email;
+        $this->user=$user;
     }
 
     /**
-     * Build the message.
+     * \Build the message.
      *
      * @return $this
      */

@@ -5,15 +5,14 @@
 <div class="section">
     <div class="content">
         <div class="content__title">
-            Убедитесь, что ваш адрес электронной почты — hello@SmilesDavis.yeah, и что вы указали его при регистрации в CreaTest
+            Убедитесь, что ваш адрес электронной почты — {{$user['email']}}, и что вы указали его при регистрации в CreaTest
         </div>
         <p class="content__description">
             Пожалуйста, нажмите кнопку ниже, чтобы подтвердить свой адрес электронной почты.
         </p>
-        <a class="content__verify" href=" {{ route('/email/verify',['header'=>"Authorization: Bearer: {token}"]) }}">Подтвердить</a>
+        <a class="content__verify" href=" {{ route('verifyEmail',['token'=>$pin,'user'=>$user]) }}">Подтвердить</a>
     </div>
 </div>
-{{--TODO:доделать вызов маршрута в блейде--}}
 
 <style>
     *{

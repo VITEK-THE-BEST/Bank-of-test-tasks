@@ -34,59 +34,54 @@ class UserController extends Controller
 
         $validate['password'] = Hash::make($validate['password']);
 
-//        $user = User::query()->create($validate);
-//
-//        $verify2 = DB::table('password_resets')->where([
-//            ['email', $validate['email']]
-//        ]);
-//
-//        if ($verify2->exists()) {
-//            $verify2->delete();
-//        }
+        $user = User::query()->create($validate);
+
+        $verify2 = DB::table('password_resets')->where([
+            ['email', $validate['email']]
+        ]);
+
+        if ($verify2->exists()) {
+            $verify2->delete();
+        }
         $pin = rand(100000, 999999);
-//        DB::table('password_resets')
-//            ->insert(
-//                [
-//                    'email' => $validate['email'],
-//                    'token' => $pin
-//                ]
-//            );
-//
-//        $token = $user->createToken($request['email'])->plainTextToken;
+        DB::table('password_resets')
+            ->insert(
+                [
+                    'email' => $validate['email'],
+                    'token' => $pin
+                ]
+            );
 
-        Mail::to($validate['email'])->send(new VerifyEmail($pin,$validate['email']));
+        $token = $user->createToken($request['email'])->plainTextToken;
+
+        Mail::to($validate['email'])->send(new VerifyEmail($pin, $user));
 
 
-        return response()->json(["user" => "отправлено"]);
-//        return response()->json(["user" => $user, "token" => $token]);
+        return response()->json(["user" => $user, "token" => $token]);
 
     }
 
+
     /**
-     * Верификация email пользователя
+     * Верификация email пользователя не должен юзать фронт
      */
-    public function verifyEmail(Request $request)
+    public function verifyEmail($token, $user)
     {
-        $validate = $request->validate([
-            'token' => 'required',
-        ]);
+        $user = User::query()->findOrFail($user);
 
         $select = DB::table('password_resets')
-            ->where('email', auth()->user()['email'])
-            ->where('token', $validate['token']);
+            ->where('email', $user['email'])
+            ->where('token', $token);
 
         if ($select->get()->isEmpty()) {
             return response()->json(["error" => "Неверный ПИН-код"], 404);
         }
         $select->delete();
 
-        $user = User::find(auth()->user()->id);
         $user->email_verified_at = Carbon::now()->getTimestamp();
         $user->save();
 
-        return redirect()->away('https://www.google.com');
-
-//        return response()->json(['message' => "Email is verified"]);
+        return redirect()->away('http://127.0.0.1:8000');;
     }
 
     /**

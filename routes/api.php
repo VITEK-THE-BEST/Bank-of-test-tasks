@@ -57,6 +57,7 @@ Route::middleware(['api', 'auth:sanctum'])->group(function () {
         Route::delete('/dropToken', [UserController::class, 'dropToken']);
         Route::patch('/update', [UserController::class, 'update']);
         Route::delete('/delete/{id}', [UserController::class, 'delete']);
+        Route::get('/checkVerifyEmail', [UserController::class, 'checkVerifyEmail']);
     });
 
     Route::group(['prefix' => 'bank'], function () {

@@ -81,7 +81,7 @@ class UserController extends Controller
         $user->email_verified_at = Carbon::now()->getTimestamp();
         $user->save();
 
-        return redirect()->away('http://127.0.0.1:8000');;
+        return redirect()->away('http://localhost:3000/verify');;
     }
 
     /**
@@ -110,8 +110,8 @@ class UserController extends Controller
         ]);
 
         Mail::to($validate['email'])->send(new VerifyEmail($token));
-        return response()->json(['message' => "повторная отправка подтверждения"]);
 
+        return response()->json(['message' => "повторная отправка подтверждения"]);
     }
 
     /**
@@ -135,7 +135,17 @@ class UserController extends Controller
 
         $token = $user->createToken($request['email'])->plainTextToken;
 
-        return response()->json(["token" => $token]);
+        return response()->json(["token" => $token,"email_verified_at" => $user['email_verified_at']]);
+    }
+
+    /**
+     * проверка корректности пользователя
+     */
+    public function checkVerifyEmail()
+    {
+        $user = auth()->user()->toArray();
+
+        return response()->json(["email_verified_at" => $user['email_verified_at']]);
     }
 
     /**

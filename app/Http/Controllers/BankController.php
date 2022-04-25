@@ -25,8 +25,8 @@ class BankController extends Controller
         ]);
         $validate['user_id'] = auth()->id();
 
-        Bank::query()->create($validate);
-        return response()->json([]);
+        $bank = Bank::query()->create($validate);
+        return response()->json($bank);
     }
 
     /**
@@ -36,6 +36,8 @@ class BankController extends Controller
      */
     public function show()
     {
+//        TODO: отображать колличество вопросов в банке
+
         $banks = Bank::query()->where('user_id', auth()->id())->get();
         return response()->json($banks);
     }

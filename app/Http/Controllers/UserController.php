@@ -4,8 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\Group;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use App\Mail\VerifyEmail;
+use Illuminate\Support\Facades\Mail;
 
 /**
  * @authenticated
@@ -31,10 +35,83 @@ class UserController extends Controller
         $validate['password'] = Hash::make($validate['password']);
 
         $user = User::query()->create($validate);
+
+        $verify2 = DB::table('password_resets')->where([
+            ['email', $validate['email']]
+        ]);
+
+        if ($verify2->exists()) {
+            $verify2->delete();
+        }
+        $pin = rand(100000, 999999);
+        DB::table('password_resets')
+            ->insert(
+                [
+                    'email' => $validate['email'],
+                    'token' => $pin
+                ]
+            );
+
         $token = $user->createToken($request['email'])->plainTextToken;
+
+        Mail::to($validate['email'])->send(new VerifyEmail($pin, $user));
+
 
         return response()->json(["user" => $user, "token" => $token]);
 
+    }
+
+
+    /**
+     * Верификация email пользователя не должен юзать фронт
+     */
+    public function verifyEmail($token, $user)
+    {
+        $user = User::query()->findOrFail($user);
+
+        $select = DB::table('password_resets')
+            ->where('email', $user['email'])
+            ->where('token', $token);
+
+        if ($select->get()->isEmpty()) {
+            return response()->json(["error" => "Неверный ПИН-код"], 404);
+        }
+        $select->delete();
+
+        $user->email_verified_at = Carbon::now()->getTimestamp();
+        $user->save();
+
+        return redirect()->away('http://localhost:3000/verify');;
+    }
+
+    /**
+     * Повторрная отправка кода подтверждения
+     */
+    public function resendPin(Request $request)
+    {
+        $validate = $request->validate([
+            'email' => 'required|email',
+        ]);
+
+
+        $verify = DB::table('password_resets')->where([
+            ['email', $validate['email']]
+        ]);
+
+        if ($verify->exists()) {
+            $verify->delete();
+        }
+
+        $token = random_int(100000, 999999);
+        DB::table('password_resets')->insert([
+            'email' => $validate['email'],
+            'token' => $token,
+            'created_at' => Carbon::now()
+        ]);
+
+        Mail::to($validate['email'])->send(new VerifyEmail($token));
+
+        return response()->json(['message' => "повторная отправка подтверждения"]);
     }
 
     /**
@@ -58,7 +135,17 @@ class UserController extends Controller
 
         $token = $user->createToken($request['email'])->plainTextToken;
 
-        return response()->json(["token" => $token]);
+        return response()->json(["token" => $token,"email_verified_at" => $user['email_verified_at']]);
+    }
+
+    /**
+     * проверка корректности пользователя
+     */
+    public function checkVerifyEmail()
+    {
+        $user = auth()->user()->toArray();
+
+        return response()->json(["email_verified_at" => $user['email_verified_at']]);
     }
 
     /**

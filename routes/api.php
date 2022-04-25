@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\BankController;
 use App\Http\Controllers\DisciplineController;
+use App\Http\Controllers\FileLoadController;
 use App\Http\Controllers\UserController;
 use \App\Http\Controllers\SectionController;
 use \App\Http\Controllers\QuestionController;
@@ -19,7 +20,24 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+/**
+ * @unauthenticated
+ */
+Route::post('/resend/email/token', [UserController::class, 'resendPin'])
+    ->name('resendPin');
 
+/**
+ * @unauthenticated
+ */
+Route::get('/email/{token}/verify/{user}', [UserController::class, 'verifyEmail'])
+    ->name('verifyEmail');
+
+//Route::middleware('auth:sanctum')->group(function () {
+//
+//    Route::middleware('verify.api')->group(function () {
+//        Route::delete('/dropToken', [UserController::class, 'dropToken']);
+//    });
+//});
 
 /**
  * @unauthenticated
@@ -39,6 +57,7 @@ Route::middleware(['api', 'auth:sanctum'])->group(function () {
         Route::delete('/dropToken', [UserController::class, 'dropToken']);
         Route::patch('/update', [UserController::class, 'update']);
         Route::delete('/delete/{id}', [UserController::class, 'delete']);
+        Route::get('/checkVerifyEmail', [UserController::class, 'checkVerifyEmail']);
     });
 
     Route::group(['prefix' => 'bank'], function () {
@@ -80,5 +99,10 @@ Route::middleware(['api', 'auth:sanctum'])->group(function () {
         Route::get('/show/{category}', [QuestionController::class, 'show']);
         Route::get('/count/{category}', [QuestionController::class, 'count']);
         Route::get('/take/{question}', [QuestionController::class, 'take']);
+    });
+
+    Route::group(['prefix' => 'files'], function () {
+        Route::post('/unloadingBank/bank/{bank}', [FileLoadController::class, 'unloadingBank']);
+        Route::post('/loadingBank', [FileLoadController::class, 'loadingBank']);
     });
 });

@@ -105,9 +105,9 @@ class FileLoadController extends Controller
     }
 
     /**
-     * Выгрузка банка
+     * Загрузка банка
      *
-     * Выгружается в формате Moodle XML
+     * Загрузка в формате Moodle XML
      */
     public function loadingBank(Request $request)
     {
@@ -136,8 +136,8 @@ class FileLoadController extends Controller
                         $bank = Bank::query()->create([
                             "name" => $name_categories[2],
                             'user_id' => auth()->id(),
-                            'start_testing' => '00.00.00',
-                            'end_testing' => '00.00.00'
+//                            'start_testing' => '00.00.00',
+//                            'end_testing' => '00.00.00'
                         ]);
                         $bank_name = $name_categories[2];
                     }

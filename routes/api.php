@@ -82,7 +82,7 @@ Route::middleware(['api', 'auth:sanctum'])->group(function () {
         Route::delete('/delete/{section}', [SectionController::class, 'delete']);
         Route::get('/createCategory/{section}/category/{category}', [SectionController::class, 'createCategory']);
         Route::delete('/deleteCategory/{section}/category/{category}', [SectionController::class, 'deleteCategory']);
-        Route::post('/showNotCategory/{section}', [SectionController::class, 'showNotCategory']);
+        Route::get('/showNotCategory/{section}', [SectionController::class, 'showNotCategory']);
         Route::get('/showCategory/{section}', [SectionController::class, 'showCategory']);
     });
     Route::group(['prefix' => 'category'], function () {

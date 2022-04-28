@@ -51,7 +51,7 @@ class BankController extends Controller
     {
         $bank = $bank->with(
             "sections"
-        )->get()[0];
+        )->get()->find($bank->id);
 
         $bank['sections'] = $bank['sections']->map(function ($section){
             $count_question = $section

@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 
 /**
  * @authenticated
- * @group !Тесты пользователя !не работают!
+ * @group !Тесты пользователя
  *
  * тесты пройденные студентом
  */
@@ -18,7 +18,6 @@ class UserTestController extends Controller
      * !Добавление результата тестирования
      *
      * assessment - это результат прохождения тестирования, должен быть значением float от 0.00 до 1.00
-     * не работает, надо потом доработать прохождение тестирования
      */
     public function create(Request $request, Bank $id)
     {
@@ -27,6 +26,29 @@ class UserTestController extends Controller
             'result' => 'required',
         ]);
 
-        return response()->json(["метод блять не рабочий !!!!"]);
+        return response()->json([]);
+    }
+
+    /**
+     * !Статистика тестирования
+     *
+     */
+    public function statistic(Request $request, Bank $id)
+    {
+        $validate = $request->validate([
+            'test_id' => 'required',
+        ]);
+
+        return response()->json([]);
+    }
+
+    /**
+     * Доступные на прохождения тесты пользователя
+     *
+     */
+    public function userTest()
+    {
+
+        return response()->json([]);
     }
 }

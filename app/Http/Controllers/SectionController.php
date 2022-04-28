@@ -27,8 +27,8 @@ class SectionController extends Controller
         ]);
         $validate['bank_id'] = $bank->id;
 
-        Section::query()->create($validate);
-        return response()->json([]);
+        $section = Section::query()->create($validate);
+        return response()->json($section);
     }
 
     /**

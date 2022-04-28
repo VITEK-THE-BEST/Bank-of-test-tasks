@@ -24,8 +24,8 @@ class CategoryController extends Controller
         ]);
         $validate['user_id'] = auth()->id();
 
-        Category::query()->create($validate);
-        return response()->json([]);
+        $category = Category::query()->create($validate);
+        return response()->json($category);
     }
 
     /**

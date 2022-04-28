@@ -4,6 +4,7 @@ use App\Http\Controllers\BankController;
 use App\Http\Controllers\DisciplineController;
 use App\Http\Controllers\FileLoadController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\UserTestController;
 use \App\Http\Controllers\SectionController;
 use \App\Http\Controllers\QuestionController;
 use \App\Http\Controllers\CategoryController;
@@ -58,13 +59,12 @@ Route::middleware(['api', 'auth:sanctum'])->group(function () {
         Route::patch('/update', [UserController::class, 'update']);
         Route::delete('/delete/{id}', [UserController::class, 'delete']);
         Route::get('/checkVerifyEmail', [UserController::class, 'checkVerifyEmail']);
-    });
 
-    Route::group(['prefix' => 'bank'], function () {
-        Route::post('/create', [BankController::class, 'create']);
-        Route::get('/show', [BankController::class, 'show']);
-        Route::put('/update/{id}', [BankController::class, 'update']);
-        Route::delete('/delete/{id}', [BankController::class, 'delete']);
+        Route::group(['prefix' => 'test'], function () {
+            Route::post('/create', [UserTestController::class, 'create']);
+            Route::post('/statistic', [UserTestController::class, 'statistic']);
+            Route::post('/userTest', [UserTestController::class, 'userTest']);
+        });
     });
 
     Route::group(['prefix' => 'discipline'], function () {
@@ -73,6 +73,14 @@ Route::middleware(['api', 'auth:sanctum'])->group(function () {
         Route::get('/addBank/{discipline}/bank/{bank}', [DisciplineController::class, 'addBank']);
         Route::delete('/delete/{id}', [DisciplineController::class, 'delete']);
         Route::put('/update/{id}', [DisciplineController::class, 'update']);
+    });
+
+    Route::group(['prefix' => 'bank'], function () {
+        Route::post('/create', [BankController::class, 'create']);
+        Route::get('/show', [BankController::class, 'show']);
+        Route::get('/showDetails/{bank}', [BankController::class, 'showDetails']);
+        Route::put('/update/{id}', [BankController::class, 'update']);
+        Route::delete('/delete/{id}', [BankController::class, 'delete']);
     });
 
     Route::group(['prefix' => 'section'], function () {

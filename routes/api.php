@@ -97,7 +97,7 @@ Route::middleware(['api', 'auth:sanctum'])->group(function () {
     Route::group(['prefix' => 'category'], function () {
         Route::post('/create', [CategoryController::class, 'create']);
         Route::put('/update/{category}', [CategoryController::class, 'update']);
-        Route::delete('/delete/{сategory}', [CategoryController::class, 'delete']);
+        Route::delete('/delete/{category}', [CategoryController::class, 'delete']);
         Route::get('/show', [CategoryController::class, 'show']);
     });
 

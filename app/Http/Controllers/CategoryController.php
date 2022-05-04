@@ -50,49 +50,28 @@ class CategoryController extends Controller
      *
      * @urlParam Category id
      */
-    public function delete(Category $сategory)
+    public function delete(Category $category)
     {
-        $сategory->delete();
+        $category->delete();
         return response()->json([]);
     }
 
     /**
-     * !!!!!!!получение категорий с количеством группы вопросов внутри категории
+     * получение категорий с количествомвопросов
      *
-     * МЕТОД ВРОДЕ БЫ НЕ НУЖЕН!?!?!?! НИКИТА СПАСИ
-     *
-     * вроде как теперь нужен такой метод не на категорию а на раздел
      */
     public function show()
     {
-//        $categories = Category::select(['id', 'name'])
-//            ->where('user_id', auth()->id())
-//            ->get();
-//
-//
-//        foreach ($categories as $category) {
-//            $questions = question::select('type_question_id')
-//                ->where('category_id', $category['id'])
-//                ->get();
-//
-//            $type_question = type_question::all();
-//
-//            $list_types = [];
-//
-//            foreach ($type_question as $item) {
-//
-//                array_push($list_types, [
-//                    'id' => $item['id'],
-//                    'name' => $item['name'],
-//                    'count' => $questions->where('type_question_id', $item['id'])->count()]);
-//            }
-//
-//            $category['total_count'] = count($questions);
-//            $category['type_count'] = $list_types;
-//        }
-//
-//        return response()->json(["success" => true,
-//            "categories" => $categories]);
+        $user = auth()->user();
+
+        $categories = $user
+            ->categories()
+            ->get()
+            ->map(function ($category){
+                $category['count_questions'] = $category->questions()->get()->count();
+                return $category;
+            });
+        return response()->json($categories);
     }
 
 }

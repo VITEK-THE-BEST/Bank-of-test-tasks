@@ -21,6 +21,8 @@ class QuestionController extends Controller
 {
     /**
      * Создание вопроса
+     *
+     * для определенной категории
      * @urlParam Category id
      */
     public function create(Request $request, Category $category)

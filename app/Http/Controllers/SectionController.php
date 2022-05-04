@@ -125,11 +125,17 @@ class SectionController extends Controller
     /**
      * показать категории раздела
      *
+     * отобразить все категории в разделе с колличеством вопросов внутри категории
      * @urlParam section id
      */
     public function showCategory(Section $section)
     {
-        return response()->json($section->categories()->get());
+        $section =  $section->categories()->get()
+            ->map(function ($category){
+                $category['count_questions'] = $category->questions()->get()->count();
+                return $category;
+            });
+        return response()->json($section);
     }
 
 }

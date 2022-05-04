@@ -32,13 +32,26 @@ class BankController extends Controller
     /**
      * Банки пользователя
      *
-     * получить банки авторизированного пользователя
+     * получить банки авторизированного пользователя c колличеством вопросов внутри банка
      */
     public function show()
     {
-//        TODO: отображать колличество вопросов в банке
+        $user = auth()->user();
 
-        $banks = Bank::query()->where('user_id', auth()->id())->get();
+        $banks = $user->banks()->get()
+            ->map(function ($bank) {
+                $bank['count_questions'] = $bank->sections()->get()
+                    ->map(function ($section) {
+                        return $section->categories()->get()
+                            ->map(function ($category) {
+                                return $category->questions()->get();
+                            });
+                    })
+                    ->count();
+
+                return $bank;
+            });
+
         return response()->json($banks);
     }
 
@@ -53,11 +66,11 @@ class BankController extends Controller
             "sections"
         )->get()->find($bank->id);
 
-        $bank['sections'] = $bank['sections']->map(function ($section){
+        $bank['sections'] = $bank['sections']->map(function ($section) {
             $count_question = $section
                 ->categories()
                 ->get()
-                ->map(function ($category){
+                ->map(function ($category) {
                     return $category->questions;
                 })->count();
 
@@ -65,7 +78,7 @@ class BankController extends Controller
             return $section;
         });
         $count_questions = 0;
-        foreach ($bank['sections']->pluck('count_questions') as  $count_question){
+        foreach ($bank['sections']->pluck('count_questions') as $count_question) {
             $count_questions += $count_question;
         }
         $bank['count_questions'] = $count_questions;

@@ -93,6 +93,7 @@ Route::middleware(['api', 'auth:sanctum'])->group(function () {
         Route::get('/showNotCategory/{section}', [SectionController::class, 'showNotCategory']);
         Route::get('/showCategory/{section}', [SectionController::class, 'showCategory']);
     });
+
     Route::group(['prefix' => 'category'], function () {
         Route::post('/create', [CategoryController::class, 'create']);
         Route::put('/update/{category}', [CategoryController::class, 'update']);

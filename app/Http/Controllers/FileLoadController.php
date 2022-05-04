@@ -27,6 +27,7 @@ class FileLoadController extends Controller
     {
         $bankName = '$CATEGORY: ' . $bank['name'] . '/';
         $giftFile = [];
+        $symbols_replace = ["\\", "{", "}"];
 
 
         foreach ($bank->sections as $section) {
@@ -35,6 +36,9 @@ class FileLoadController extends Controller
                 array_push($giftFile, $CATEGORY_NAME . PHP_EOL . PHP_EOL);
 
                 foreach ($category->questions as $question) {
+                    foreach ($symbols_replace as $symbol) {
+                        $question['question'] = str_replace($symbol, '\\' . $symbol, $question['question']);
+                    }
 
                     switch ($question['type_question_id']) {
 
@@ -127,7 +131,7 @@ class FileLoadController extends Controller
                 $name_categories = explode("/", $question_obj['category']['text']);
 
                 if (count($name_categories) == 5) {
-                    if ($query_questions != []){
+                    if ($query_questions != []) {
                         $category->questions()->saveMany($query_questions);
                         $query_questions = [];
                     }
@@ -256,9 +260,9 @@ class FileLoadController extends Controller
 
                     $opinions_arr = [];
                     $answer_arr = [];
-                    $question_text = str_replace('_____', '@@' , $question_text);
+                    $question_text = str_replace('_____', '@@', $question_text);
 
-                    array_push($answer_arr,$question_obj['answer']['text']);
+                    array_push($answer_arr, $question_obj['answer']['text']);
 
                     array_push($query_questions, new Question([
                         'type_question_id' => 2,

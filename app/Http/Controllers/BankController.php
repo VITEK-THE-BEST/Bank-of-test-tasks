@@ -56,6 +56,42 @@ class BankController extends Controller
     }
 
     /**
+     * Банки пользователя для  выгрузки
+     *
+     * получить банки авторизированного пользователя c колличеством категорий, разделов, вопросов
+     */
+    public function showUnload()
+    {
+        $user = auth()->user();
+
+        $banks = $user->banks
+            ->map(function ($bank) {
+                //колличество разделов
+                $sections = $bank->sections()->get();
+                $bank['count_sections'] = $sections->count();
+
+                //колличество категорий
+                $bank['count_categories'] = $sections
+                    ->map(function ($section) {
+                        return $section->categories()->get()->count();
+                    })->sum();
+
+                //колличество вопросов
+                $bank['count_questions'] = $bank->sections()->get()
+                    ->map(function ($section) {
+                        return $section->categories()->get()
+                            ->map(function ($category) {
+                                return $category->questions()->get()->count();
+                            })->sum();
+                    })->sum();
+
+                return $bank;
+            });
+
+        return response()->json($banks);
+    }
+
+    /**
      * Получить банк по id
      *
      * получить детальную информацию о банке

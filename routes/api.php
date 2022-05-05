@@ -99,6 +99,7 @@ Route::middleware(['api', 'auth:sanctum'])->group(function () {
         Route::put('/update/{category}', [CategoryController::class, 'update']);
         Route::delete('/delete/{category}', [CategoryController::class, 'delete']);
         Route::get('/show', [CategoryController::class, 'show']);
+        Route::get('/showDetail/{category}', [CategoryController::class, 'showDetail']);
     });
 
     Route::group(['prefix' => 'question'], function () {

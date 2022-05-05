@@ -81,6 +81,7 @@ Route::middleware(['api', 'auth:sanctum'])->group(function () {
         Route::get('/showDetails/{bank}', [BankController::class, 'showDetails']);
         Route::put('/update/{id}', [BankController::class, 'update']);
         Route::delete('/delete/{id}', [BankController::class, 'delete']);
+        Route::delete('/showUnload', [BankController::class, 'showUnload']);
     });
 
     Route::group(['prefix' => 'section'], function () {

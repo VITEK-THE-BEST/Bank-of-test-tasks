@@ -38,16 +38,15 @@ class BankController extends Controller
     {
         $user = auth()->user();
 
-        $banks = $user->banks()->get()
+        $banks = $user->banks
             ->map(function ($bank) {
                 $bank['count_questions'] = $bank->sections()->get()
                     ->map(function ($section) {
                         return $section->categories()->get()
                             ->map(function ($category) {
-                                return $category->questions()->get();
-                            });
-                    })
-                    ->count();
+                                return $category->questions()->get()->count();
+                            })->sum();
+                    })->sum();
 
                 return $bank;
             });

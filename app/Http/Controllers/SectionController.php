@@ -119,7 +119,7 @@ class SectionController extends Controller
                 return $categorySection['pivot']['category_id'] != $category['id'];
             });
         }
-        return response()->json([$userCategories]);
+        return response()->json($userCategories);
     }
 
     /**

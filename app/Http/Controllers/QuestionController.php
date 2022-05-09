@@ -31,7 +31,7 @@ class QuestionController extends Controller
             'type_question_id' => 'required|integer',
             'question' => 'required',
             'answer' => 'sometimes|array',
-            'opinions' => 'sometimes|array',
+            'opinions' => 'sometimes',
         ]);
         $validate['category_id'] = $category->id;
 

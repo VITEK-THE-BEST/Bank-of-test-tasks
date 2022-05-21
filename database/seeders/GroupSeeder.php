@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Group;
+use Database\Factories\GroupFactory;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -17,17 +18,11 @@ class GroupSeeder extends Seeder
      */
     public function run()
     {
-        Group::insert(
+        GroupFactory::new()->createMany([
             ['name' => "1181б"],
-        );
-        Group::insert(
             ['name' => "1182б"],
-        );
-        Group::insert(
             ['name' => "1183б"],
-        );
-        Group::insert(
             ['name' => "1111б"],
-        );
+        ]);
     }
 }

@@ -7,15 +7,16 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class TypeQuestion
- * 
+ *
  * @property int $id
  * @property int $question_group_id
  * @property string $name
- * 
+ *
  * @property QuestionGroup $question_group
  * @property Collection|Question[] $questions
  *
@@ -23,7 +24,9 @@ use Illuminate\Database\Eloquent\Model;
  */
 class TypeQuestion extends Model
 {
-	protected $table = 'type_questions';
+    use HasFactory;
+
+    protected $table = 'type_questions';
 	public $timestamps = false;
 
 	protected $casts = [

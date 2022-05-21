@@ -7,6 +7,7 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -26,7 +27,9 @@ use Illuminate\Database\Eloquent\Model;
  */
 class UserTest extends Model
 {
-	protected $table = 'user_tests';
+    use HasFactory;
+
+    protected $table = 'user_tests';
 	public $timestamps = false;
 
 	protected $casts = [

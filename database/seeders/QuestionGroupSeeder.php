@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\QuestionGroup;
+use Database\Factories\QuestionGroupFactory;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -15,17 +16,11 @@ class QuestionGroupSeeder extends Seeder
      */
     public function run()
     {
-        QuestionGroup::insert(
+        QuestionGroupFactory::new()->createMany([
             ['name' => "Открытых"],
-        );
-        QuestionGroup::insert(
             ['name' => "Закрытых"],
-        );
-        QuestionGroup::insert(
             ['name' => "На соответствие"],
-        );
-        QuestionGroup::insert(
             ['name' => "На упорядочивание"],
-        );
+        ]);
     }
 }

@@ -7,6 +7,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -22,7 +23,9 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Discipline extends Model
 {
-	protected $table = 'disciplines';
+    use HasFactory;
+
+    protected $table = 'disciplines';
 	public $timestamps = false;
 
 	protected $fillable = [

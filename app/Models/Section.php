@@ -7,6 +7,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -23,7 +24,9 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Section extends Model
 {
-	protected $table = 'sections';
+    use HasFactory;
+
+    protected $table = 'sections';
 	public $timestamps = false;
 
 	protected $casts = [

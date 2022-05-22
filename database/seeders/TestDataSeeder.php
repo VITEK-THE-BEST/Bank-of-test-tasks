@@ -21,11 +21,11 @@ class TestDataSeeder extends Seeder
     public function run()
     {
         UserFactory::new()->has(
-            Bank::factory(20)
+            Bank::factory(5)
                 ->has(
                     Section::factory(5)
                         ->hasAttached(
-                            Category::factory(10)
+                            Category::factory(5)
                                 ->has(
                                     Question::factory(16)->typeQuestion()
                                 )

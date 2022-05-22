@@ -55,7 +55,7 @@ class QuestionFactory extends Factory
                 case 2:
                     return [
                         'type_question_id' => 2,
-                        'question' => "В одном байте @@ бит",
+                        'question' => "В одном байте @8@ бит",
                         'answer' => ["8"],
                     ];
                 case 3:

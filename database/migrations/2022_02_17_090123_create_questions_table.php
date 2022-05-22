@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('questions', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('category_id');
-            $table->foreign('category_id')->references('id')->on('categories');
+            $table->foreign('category_id')->references('id')->on('categories')->cascadeOnDelete();
 
             $table->unsignedBigInteger('type_question_id');
             $table->foreign('type_question_id')->references('id')->on('type_questions');

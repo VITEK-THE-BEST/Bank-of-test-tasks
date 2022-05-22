@@ -20,9 +20,6 @@ class TestDataSeeder extends Seeder
      */
     public function run()
     {
-//        $user = UserFactory::new()->create([
-//            'email'=>"test@mail.ru",
-//        ]);
         UserFactory::new()->has(
             Bank::factory(20)
                 ->has(

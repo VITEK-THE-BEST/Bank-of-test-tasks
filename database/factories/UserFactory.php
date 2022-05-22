@@ -23,7 +23,7 @@ class UserFactory extends Factory
             'patronymic' => $this->faker->lastName(),
             'email' => $this->faker->unique()->safeEmail(),
             'email_verified_at' => now(),
-            'password' => '$2y$10$lpjgli5Gr74qaE0Ha1w.IuRfyZ10/X63./9IejVK.FlylUWeRREVW', // password
+            'password' => '$2y$10$lpjgli5Gr74qaE0Ha1w.IuRfyZ10/X63./9IejVK.FlylUWeRREVW', // password qwe123
             'remember_token' => Str::random(10),
 //            'create_at' => $this->faker->date(),
         ];

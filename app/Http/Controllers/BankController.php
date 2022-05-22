@@ -58,6 +58,7 @@ class BankController extends Controller
      * Банки пользователя для  выгрузки
      *
      * получить банки авторизированного пользователя c колличеством категорий, разделов, вопросов
+     * ИСПОЛЬЗОВАТЬ ТОЛЬКО НА ВЫГРУЗКУ, ЗАПРОС ПИЗДЕЦ БОЛЬШОЙ
      */
     public function showUnload()
     {
@@ -99,27 +100,19 @@ class BankController extends Controller
     {
         $bank = $bank->with(
             "sections"
-        )->get()->find($bank->id);
+        )->find($bank->id);
 
         $bank['sections'] = $bank['sections']->map(function ($section) {
-            $count_question = $section
-                ->categories()
-                ->get()
+            $section['count_questions'] = $section->categories()->get()
                 ->map(function ($category) {
-                    return $category->questions;
-                })->count();
-
-            $section['count_questions'] = $count_question;
+                    return $category->questions()->get()->count();
+                })->sum();
             return $section;
         });
-        $count_questions = 0;
-        foreach ($bank['sections']->pluck('count_questions') as $count_question) {
-            $count_questions += $count_question;
-        }
-        $bank['count_questions'] = $count_questions;
+
+        $bank['count_questions'] = $bank['sections']->pluck('count_questions')->sum();
 
         return response()->json($bank);
-
     }
 
     /**

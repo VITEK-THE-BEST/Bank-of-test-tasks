@@ -27,7 +27,7 @@ class FileLoadController extends Controller
     {
         $bankName = '$CATEGORY: ' . $bank['name'] . '/';
         $giftFile = [];
-        $symbols_replace = ["\\", "{", "}"];
+//        $symbols_replace = ["\\", "{", "}"];
 
 
         foreach ($bank->sections as $section) {
@@ -36,9 +36,10 @@ class FileLoadController extends Controller
                 array_push($giftFile, $CATEGORY_NAME . PHP_EOL . PHP_EOL);
 
                 foreach ($category->questions as $question) {
-                    foreach ($symbols_replace as $symbol) {
-                        $question['question'] = str_replace($symbol, '\\' . $symbol, $question['question']);
-                    }
+//                    foreach ($symbols_replace as $symbol) {
+//                        $question['question'] = str_replace($symbol, '\\' . $symbol, $question['question']);
+//                    }
+                    preg_quote($question['question']);
 
                     switch ($question['type_question_id']) {
 
@@ -55,12 +56,20 @@ class FileLoadController extends Controller
 
                             array_push($giftFile, '}' . PHP_EOL . PHP_EOL);
                             break;
-                        case 2: // закрытый вопрос, возможно указать только один вариант на подстановку
-//                            FIXME: Добавить поддержку различных вариантов, а так-же что в спец символе может быть значение
-                            foreach ($question['answer'] as $answer) {
-                                $position = strpos($question['question'], "@@");
-                                $question['question'] = substr_replace($question['question'], "{ =" . $answer . " }", $position, 2);
+                        case 2: // закрытый вопрос, возможно множество ответов
+
+                            if (preg_match("!@(.*?)@!si", $question['question'], $matches)) {
+                                $question['question'] = str_replace($matches[0], "@@", $question['question']);
                             }
+
+                            $position = strpos($question['question'], "@@");
+                            $answer_val = '';
+
+                            foreach ($question['answer'] as $answer) {
+                                $answer_val = $answer_val . "=%100%" . $answer . "# ";
+                            }
+                            $question['question'] = str_replace("@@", "{ " . $answer_val . " }", $question['question']);
+
                             array_push($giftFile, $question['question'] . PHP_EOL . PHP_EOL);
                             break;
                         case 3: // на соответсвие

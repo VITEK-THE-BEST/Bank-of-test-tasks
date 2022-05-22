@@ -56,7 +56,7 @@ class QuestionController extends Controller
         ]);
 
         $question->update($validate);
-        return response()->json([]);
+        return response()->json($question);
     }
 
     /**

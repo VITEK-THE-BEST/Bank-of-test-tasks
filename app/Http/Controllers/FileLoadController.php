@@ -56,6 +56,7 @@ class FileLoadController extends Controller
                             array_push($giftFile, '}' . PHP_EOL . PHP_EOL);
                             break;
                         case 2: // закрытый вопрос, возможно указать только один вариант на подстановку
+//                            FIXME: Добавить поддержку различных вариантов, а так-же что в спец символе может быть значение
                             foreach ($question['answer'] as $answer) {
                                 $position = strpos($question['question'], "@@");
                                 $question['question'] = substr_replace($question['question'], "{ =" . $answer . " }", $position, 2);

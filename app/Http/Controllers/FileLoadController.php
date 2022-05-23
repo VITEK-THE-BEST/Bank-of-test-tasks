@@ -9,6 +9,7 @@ use App\Models\Question;
 use App\Models\Section;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use PhpOffice\PhpWord\TemplateProcessor;
 
 /**
  * @authenticated
@@ -286,6 +287,36 @@ class FileLoadController extends Controller
 
         }
         return response()->json([]);
+    }
+
+    public function passport(Request $request, Bank $bank)
+    {
+        $validate = $request->validate([
+            'scope_btz' => 'required',//входящая диагностика , текущий контроль ,промежуточный контроль (зачет), промежуточный контроль (экзамен), контроль остаточных знаний
+            'time_testing' => 'required',//время провдение тестирования в минутах
+            'difficulty_level' => 'required',//(базовый, повышенный, высокий)
+            'max_score' => 'required',//максимальная оценка
+        ]);
+
+        $month = ['01' => 'Январь', '02' => 'Февраль', '03' => 'Март', '04' => 'Апреля', '05' => 'Май', '06' => 'Июнь', '07' => 'Июль', '08' => 'Август', '09' => 'Сентябрь', '10' => 'Октябрь', '11' => 'Ноябрь', '12' => 'Декабрь'];
+        $templateProcessor = new TemplateProcessor('../storage/resourse/test.docx');
+
+        $templateProcessor->setValue('scope_btz', $validate['scope_btz']);
+        $templateProcessor->setValue('btz_name', $bank->name);
+        $templateProcessor->setValue('count_questions', "11111111111111111111111111");
+        $templateProcessor->setValue('time_testing', $validate['time_testing']);
+        $templateProcessor->setValue('difficulty_level', $validate['difficulty_level']);
+        $templateProcessor->setValue('max_score', $validate['max_score']);
+
+        $templateProcessor->setValue('user_name', auth()->user()->first_name ." ". auth()->user()->last_name ." ". auth()->user()->patronymic);
+        $templateProcessor->setValue('second_name', auth()->user()->last_name);
+        $templateProcessor->setValue('first_name_reduction', substr(auth()->user()->first_name, 0, 1));
+        $templateProcessor->setValue('patronymic_reduction', substr(auth()->user()->patronymic, 0, 1));
+
+        $templateProcessor->setValue('now_date', date('d').$month[date('m')].date('Y'));
+
+//        $templateProcessor->saveAs('C:/Users/vikto/Desktop/test/passport.docx');
+//        https://phpword.readthedocs.io/en/latest/templates-processing.html#clonerowandsetvalues
     }
 
 

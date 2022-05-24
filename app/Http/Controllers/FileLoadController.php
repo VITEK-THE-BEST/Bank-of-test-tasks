@@ -289,6 +289,17 @@ class FileLoadController extends Controller
         return response()->json([]);
     }
 
+    /**
+     * Выргузка паспорта
+     *
+     'scope_btz' => 'required',//входящая диагностика , текущий контроль ,промежуточный контроль (зачет), промежуточный контроль (экзамен), контроль остаточных знаний
+    'time_testing' => 'required',//время провдение тестирования в минутах
+    'difficulty_level' => 'required',//(базовый, повышенный, высокий)
+    'max_score' => 'required',//максимальная оценка
+     *
+     *
+     * ФОРМАТ ФАЙЛА DOCX
+     * */
     public function passport(Request $request, Bank $bank)
     {
         $validate = $request->validate([
@@ -299,7 +310,7 @@ class FileLoadController extends Controller
         ]);
 
         $month = ['01' => 'Январь', '02' => 'Февраль', '03' => 'Март', '04' => 'Апреля', '05' => 'Май', '06' => 'Июнь', '07' => 'Июль', '08' => 'Август', '09' => 'Сентябрь', '10' => 'Октябрь', '11' => 'Ноябрь', '12' => 'Декабрь'];
-        $templateProcessor = new TemplateProcessor('../storage/resourse/test.docx');
+        $templateProcessor = new TemplateProcessor('../storage/resourse/passport_template.docx');
 
         $templateProcessor->setValue('scope_btz', $validate['scope_btz']);
         $templateProcessor->setValue('btz_name', $bank->name);
@@ -315,8 +326,69 @@ class FileLoadController extends Controller
 
         $templateProcessor->setValue('now_date', date('d').$month[date('m')].date('Y'));
 
-//        $templateProcessor->saveAs('C:/Users/vikto/Desktop/test/passport.docx');
-//        https://phpword.readthedocs.io/en/latest/templates-processing.html#clonerowandsetvalues
+        ##заполнение таблицы
+        $templateProcessor->cloneRow('section', $bank->sections->count());
+
+        foreach ($bank->sections as $key => $val) {
+            $key++;
+            $section = Section::query()->with('categories')->find($val->id);
+            $templateProcessor->cloneRow('category#' . $key, $section->categories->count());
+
+            foreach ($section->categories as $i => $category) {
+                $i++;
+                $section_val = '';
+                $section_num = '';
+                if ($i == 1) {
+                    $section_val = $section['name'];
+                    $section_num = $key.'.';
+                }
+
+                $questions_type = $category->with([
+                    'questions.type_question.question_group'
+                ])->find($category->id);
+
+                $count_type_question = $questions_type->questions->pluck('type_question.question_group')->countBy('name')->toArray();
+                $q_1 = array_key_exists('Открытых', $count_type_question) ? $count_type_question['Открытых'] : 0;
+                $q_2 = array_key_exists('Закрытых', $count_type_question) ? $count_type_question['Закрытых'] : 0;
+                $q_3 = array_key_exists('На соответствие', $count_type_question) ? $count_type_question['На соответствие'] : 0;
+                $q_4 = array_key_exists('На упорядочивание', $count_type_question) ? $count_type_question['На упорядочивание'] : 0;
+
+                $templateProcessor->setValues([
+                    "section#" . $key . '#' . $i => $section_val,
+                    "category#" . $key . '#' . $i => $category['name'],
+
+                    "q_1#" . $key . '#' . $i => $q_1,
+                    "q_2#" . $key . '#' . $i => $q_2,
+                    "q_3#" . $key . '#' . $i => $q_3,
+                    "q_4#" . $key . '#' . $i => $q_4,
+                    "section_n#" . $key . '#' . $i => $section_num,
+                ]);
+            }
+        }
+        $bank_count_group_type = $bank['sections']->map(function ($section) {
+            return $section->categories()->get()
+                ->map(function ($category) {
+                    return $category->questions()->get()
+                        ->map(function ($question){
+                            return $question->type_question->question_group;
+                        });
+                });
+        });
+        $bank_count_group_type = $bank_count_group_type->flatten()->countBy('name')->toArray();
+        $q_all_1 = array_key_exists('Открытых', $bank_count_group_type) ? $bank_count_group_type['Открытых'] : 0;
+        $q_all_2 = array_key_exists('Закрытых', $bank_count_group_type) ? $bank_count_group_type['Закрытых'] : 0;
+        $q_all_3 = array_key_exists('На соответствие', $bank_count_group_type) ? $bank_count_group_type['На соответствие'] : 0;
+        $q_all_4 = array_key_exists('На упорядочивание', $bank_count_group_type) ? $bank_count_group_type['На упорядочивание'] : 0;
+
+        $templateProcessor->setValues([
+            "q_all_1" => $q_all_1,
+            "q_all_2" => $q_all_2,
+            "q_all_3" => $q_all_3,
+            "q_all_4" => $q_all_4,
+        ]);
+
+        $templateProcessor->saveAs('../storage/resourse/passport.docx');
+        return response()->download('../storage/resourse/passport.docx');
     }
 
 

@@ -98,21 +98,33 @@ class BankController extends Controller
      */
     public function showDetails(Bank $bank)
     {
-        $bank = $bank->with(
-            "sections"
-        )->find($bank->id);
+        $bank = Bank::query()->find(1);
 
-        $bank['sections'] = $bank['sections']->map(function ($section) {
-            $section['count_questions'] = $section->categories()->get()
+        $bank = $bank['sections']->map(function ($section) {
+            return $section->categories()->get()
                 ->map(function ($category) {
-                    return $category->questions()->get()->count();
-                })->sum();
-            return $section;
+                    return $category->questions()->get()
+                        ->map(function ($question){
+                            return $question->type_question->question_group;
+                        });
+                });
         });
-
-        $bank['count_questions'] = $bank['sections']->pluck('count_questions')->sum();
-
-        return response()->json($bank);
+        return $bank->flatten()->groupBy('name');
+//        $bank = $bank->with(
+//            "sections"
+//        )->find($bank->id);
+//
+//        $bank['sections'] = $bank['sections']->map(function ($section) {
+//            $section['count_questions'] = $section->categories()->get()
+//                ->map(function ($category) {
+//                    return $category->questions()->get()->count();
+//                })->sum();
+//            return $section;
+//        });
+//
+//        $bank['count_questions'] = $bank['sections']->pluck('count_questions')->sum();
+//
+//        return response()->json($bank);
     }
 
     /**

@@ -115,5 +115,6 @@ Route::middleware(['api', 'auth:sanctum'])->group(function () {
     Route::group(['prefix' => 'files'], function () {
         Route::post('/unloadingBank/bank/{bank}', [FileLoadController::class, 'unloadingBank']);
         Route::post('/loadingBank', [FileLoadController::class, 'loadingBank']);
+        Route::post('/passport/{bank}', [FileLoadController::class, 'passport']);
     });
 });

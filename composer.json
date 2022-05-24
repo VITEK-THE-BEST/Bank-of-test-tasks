@@ -6,6 +6,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.0.2",
+        "ext-simplexml": "*",
         "backpack/crud": "^5.0",
         "backpack/permissionmanager": "^6.0",
         "fruitcake/laravel-cors": "^2.0.5",
@@ -13,7 +14,7 @@
         "laravel/framework": "^9.0",
         "laravel/sanctum": "^2.14",
         "laravel/tinker": "^2.7",
-      "ext-simplexml": "*"
+        "phpoffice/phpword": "^0.18.3"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",

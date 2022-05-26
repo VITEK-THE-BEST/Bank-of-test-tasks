@@ -22,6 +22,10 @@ return new class extends Migration
             $table->unsignedBigInteger('bank_id');
             $table->foreign('bank_id')->references('id')->on('banks');
 
+            $table->date("time_testing")->nullable();
+            $table->date("start_testing");
+            $table->date("end_testing");
+
         });
     }
 

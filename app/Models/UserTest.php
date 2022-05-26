@@ -37,10 +37,18 @@ class UserTest extends Model
         'bank_id' => 'int',
     ];
 
+    protected $dates = [
+        'time_testing',
+        'start_testing',
+        'end_testing'
+    ];
 
     protected $fillable = [
         'user_id',
         'bank_id',
+        'time_testing',
+        'start_testing',
+        'end_testing'
     ];
 
     public function bank()

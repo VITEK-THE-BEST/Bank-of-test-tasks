@@ -8,16 +8,15 @@ use Illuminate\Http\Request;
 
 /**
  * @authenticated
- * @group !Тесты пользователя
+ * @group Управления тестирвоаниями
  *
- * тесты пройденные студентом
+ * управление тестированиями, добавление удаление и тд
  */
 class UserTestController extends Controller
 {
     /**
-     * !Добавление результата тестирования
+     * Отправить банк на тестирование
      *
-     * assessment - это результат прохождения тестирования, должен быть значением float от 0.00 до 1.00
      */
     public function create(Request $request, Bank $id)
     {

@@ -22,9 +22,6 @@ return new class extends Migration
             $table->unsignedBigInteger('bank_id');
             $table->foreign('bank_id')->references('id')->on('banks');
 
-            $table->float("assessment",5);
-            $table->json("result");
-            $table->date("testing_time");
         });
     }
 

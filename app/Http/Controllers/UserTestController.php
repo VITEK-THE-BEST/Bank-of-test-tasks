@@ -21,8 +21,9 @@ class UserTestController extends Controller
     public function create(Request $request, Bank $id)
     {
         $validate = $request->validate([
-            'testing_time' => 'required',
-            'result' => 'required',
+            'time_testing' => 'sometimes',
+            'start_testing' => 'required',
+            'end_testing' => 'required',
         ]);
 
         return response()->json([]);

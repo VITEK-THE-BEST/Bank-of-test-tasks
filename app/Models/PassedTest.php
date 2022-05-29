@@ -18,7 +18,6 @@ class PassedTest extends Model
     ];
 
     protected $dates = [
-        'start_testing',
         'end_testing'
     ];
 
@@ -26,7 +25,6 @@ class PassedTest extends Model
         'user_test_id',
         'assessment',
         'result',
-        'start_testing',
         'end_testing'
     ];
 

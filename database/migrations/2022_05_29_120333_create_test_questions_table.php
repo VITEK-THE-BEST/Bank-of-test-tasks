@@ -13,15 +13,17 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('passed_tests', function (Blueprint $table) {
+        Schema::create('test_questions', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_test_id')->nullable()->default(null);
+            $table->unsignedBigInteger('user_test_id');
             $table->foreign('user_test_id')->references('id')->on('user_tests')->cascadeOnDelete();
 
+            $table->unsignedBigInteger('type_question_id');
+            $table->foreign('type_question_id')->references('id')->on('type_questions');
 
-            $table->float("assessment",5);
-            $table->json("result");
-            $table->date("end_testing")->nullable();
+            $table->string("question");
+            $table->json("answer");
+            $table->json("opinions")->nullable();
         });
     }
 
@@ -32,6 +34,6 @@ return new class extends Migration
      */
     public function down()
     {
-        //
+        Schema::dropIfExists('test_questions');
     }
 };

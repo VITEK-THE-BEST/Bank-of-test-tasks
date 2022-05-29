@@ -35,10 +35,11 @@ class UserTest extends Model
     protected $casts = [
         'user_id' => 'int',
         'bank_id' => 'int',
+        'time_testing' => 'int',
+
     ];
 
     protected $dates = [
-        'time_testing',
         'start_testing',
         'end_testing'
     ];
@@ -64,5 +65,9 @@ class UserTest extends Model
     public function passed_tests()
     {
         return $this->hasMany(PassedTest::class);
+    }
+    public function test_questions()
+    {
+        return $this->hasMany(TestQuestion::class);
     }
 }

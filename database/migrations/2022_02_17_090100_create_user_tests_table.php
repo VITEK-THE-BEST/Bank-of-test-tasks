@@ -17,12 +17,13 @@ return new class extends Migration
             $table->id();
 
             $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('user_id')->references('id')->on('users')->cascadeOnDelete();
 
             $table->unsignedBigInteger('bank_id');
-            $table->foreign('bank_id')->references('id')->on('banks');
+            $table->foreign('bank_id')->references('id')->on('banks')->cascadeOnDelete();
 
-            $table->date("time_testing")->nullable();
+            $table->string("name");
+            $table->integer("time_testing")->nullable();
             $table->date("start_testing");
             $table->date("end_testing");
 

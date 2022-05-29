@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Bank;
+use App\Models\TestQuestion;
+use App\Models\UserTest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 /**
  * @authenticated
@@ -17,38 +20,88 @@ class UserTestController extends Controller
     /**
      * Отправить банк на тестирование
      *
+     * ВНИМАНИЕ ВОПРОСЫ ИЗ БАНКА ДОБАВЯТСЯ В ОТДЕЛЬНУЮ ТАБЛИЦУ И ИЗМЕНИТЬ ИХ УЖЕ НЕ БУДЕТ ВОЗМОЖНОСТИ ТОЛЬКО УДАЛИТЬ ТЕСТ
+     *
      */
-    public function create(Request $request, Bank $id)
+    public function create(Request $request, Bank $bank)
     {
         $validate = $request->validate([
+            'name' => 'required',
             'time_testing' => 'sometimes',
             'start_testing' => 'required',
             'end_testing' => 'required',
         ]);
+        $validate['bank_id'] = $bank->id;
+        $validate['user_id'] = auth()->id();
 
-        return response()->json([]);
+        $test = UserTest::query()->create($validate);
+
+        $query_questions = [];
+
+        //получение всех значений FIXME:передалть бы этот кал
+        $bank = Bank::query()->find(1);
+        $bank = $bank
+            ->with(['sections.categories.questions'])
+            ->find($bank->id);
+
+        //фильтрация вопросов FIXME:передалть бы этот кал
+        $questions = $bank['sections']
+            ->pluck('categories')
+            ->flatten()
+            ->pluck('questions')
+            ->flatten();
+
+        foreach ($questions as $question) {
+            array_push($query_questions, new TestQuestion([
+                'type_question_id' => $question['type_question_id'],
+                'category_id' => $test['id'],
+                'question' => $question['question'],
+                'answer' => $question['answer'],
+                'opinions' => $question['opinions']
+            ]));
+        }
+        $test->test_questions()->saveMany($query_questions);
+        $test['count_questions'] = count($query_questions);
+        return response()->json($test);
     }
 
     /**
-     * !Статистика тестирования
+     * показать все активные тесты пользователя
      *
      */
-    public function statistic(Request $request, Bank $id)
+    public function show()
+    {
+        $tests = auth()->user()
+            ->user_tests()
+            ->get();
+
+        return response()->json($tests);
+    }
+
+    /**
+     * обновить время тестирования
+     *
+     */
+    public function update(Request $request, UserTest $userTest)
     {
         $validate = $request->validate([
-            'test_id' => 'required',
+            'time_testing' => 'sometimes',
+            'start_testing' => 'sometimes',
+            'end_testing' => 'sometimes',
         ]);
+        $userTest->update($validate);
 
         return response()->json([]);
     }
 
     /**
-     * Доступные на прохождения тесты пользователя
+     * удалить тест
      *
      */
-    public function userTest()
+    public function delete(UserTest $userTest)
     {
-
+        $userTest->delete();
         return response()->json([]);
     }
+
 }

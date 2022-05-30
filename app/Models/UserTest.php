@@ -30,34 +30,45 @@ class UserTest extends Model
     use HasFactory;
 
     protected $table = 'user_tests';
-	public $timestamps = false;
+    public $timestamps = false;
 
-	protected $casts = [
-		'user_id' => 'int',
-		'bank_id' => 'int',
-		'assessment' => 'float',
-		'result' => 'array'
-	];
+    protected $casts = [
+        'user_id' => 'int',
+        'bank_id' => 'int',
+        'time_testing' => 'int',
 
-	protected $dates = [
-		'testing_time'
-	];
+    ];
 
-	protected $fillable = [
-		'user_id',
-		'bank_id',
-		'assessment',
-		'result',
-		'testing_time'
-	];
+    protected $dates = [
+        'start_testing',
+        'end_testing'
+    ];
 
-	public function bank()
-	{
-		return $this->belongsTo(Bank::class);
-	}
+    protected $fillable = [
+        'user_id',
+        'bank_id',
+        'time_testing',
+        'name',
+        'start_testing',
+        'end_testing'
+    ];
 
-	public function user()
-	{
-		return $this->belongsTo(User::class);
-	}
+    public function bank()
+    {
+        return $this->belongsTo(Bank::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function passed_tests()
+    {
+        return $this->hasMany(PassedTest::class);
+    }
+    public function test_questions()
+    {
+        return $this->hasMany(TestQuestion::class);
+    }
 }

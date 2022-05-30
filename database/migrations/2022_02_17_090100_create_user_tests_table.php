@@ -17,14 +17,16 @@ return new class extends Migration
             $table->id();
 
             $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('user_id')->references('id')->on('users')->cascadeOnDelete();
 
             $table->unsignedBigInteger('bank_id');
-            $table->foreign('bank_id')->references('id')->on('banks');
+            $table->foreign('bank_id')->references('id')->on('banks')->cascadeOnDelete();
 
-            $table->float("assessment",5);
-            $table->json("result");
-            $table->date("testing_time");
+            $table->string("name");
+            $table->integer("time_testing")->nullable();
+            $table->dateTime("start_testing")->default('2000-01-01');
+            $table->dateTime("end_testing")->default('2099-01-01');
+
         });
     }
 

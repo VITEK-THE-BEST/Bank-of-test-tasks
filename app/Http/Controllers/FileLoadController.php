@@ -49,9 +49,9 @@ class FileLoadController extends Controller
 
                             foreach ($question['opinions'] as $opinion) {
                                 if ($opinion['id'] == $question['answer'][0]) {
-                                    array_push($giftFile, "=" . $opinion['opinion'] . PHP_EOL);
+                                    array_push($giftFile, "=" . preg_quote($opinion['opinion']) . PHP_EOL);
                                 } else {
-                                    array_push($giftFile, "~" . $opinion['opinion'] . PHP_EOL);
+                                    array_push($giftFile, "~" . preg_quote($opinion['opinion']) . PHP_EOL);
                                 }
                             }
 
@@ -67,7 +67,7 @@ class FileLoadController extends Controller
                             $answer_val = '';
 
                             foreach ($question['answer'] as $answer) {
-                                $answer_val = $answer_val . "=%100%" . $answer . "# ";
+                                $answer_val = $answer_val . "=%100%" . preg_quote($answer) . "# ";
                             }
                             $question['question'] = str_replace("@@", "{ " . $answer_val . " }", $question['question']);
 
@@ -78,7 +78,7 @@ class FileLoadController extends Controller
                             foreach ($question['answer'] as $answer) {
                                 foreach ($question['opinions'][0]['opinions'] as $opinion_opinion) {
                                     if ($opinion_opinion['id'] == $answer['id_opinion']) {
-                                        $question_opinion = $opinion_opinion['opinion'];
+                                        $question_opinion = preg_quote($opinion_opinion['opinion']);
                                         break;
                                     }
                                 }
@@ -97,7 +97,7 @@ class FileLoadController extends Controller
                             foreach ($question['answer'] as $answer) {
                                 foreach ($question['opinions'] as $opinion) {
                                     if ($opinion['id'] == $answer) {
-                                        array_push($giftFile, $opinion['opinion'] . PHP_EOL);
+                                        array_push($giftFile, preg_quote($opinion['opinion']) . PHP_EOL);
                                         break;
                                     }
 
@@ -292,10 +292,10 @@ class FileLoadController extends Controller
     /**
      * Выргузка паспорта
      *
-     'scope_btz' => 'required',//входящая диагностика , текущий контроль ,промежуточный контроль (зачет), промежуточный контроль (экзамен), контроль остаточных знаний
-    'time_testing' => 'required',//время провдение тестирования в минутах
-    'difficulty_level' => 'required',//(базовый, повышенный, высокий)
-    'max_score' => 'required',//максимальная оценка
+     * 'scope_btz' => 'required',//входящая диагностика , текущий контроль ,промежуточный контроль (зачет), промежуточный контроль (экзамен), контроль остаточных знаний
+     * 'time_testing' => 'required',//время провдение тестирования в минутах
+     * 'difficulty_level' => 'required',//(базовый, повышенный, высокий)
+     * 'max_score' => 'required',//максимальная оценка
      *
      *
      * ФОРМАТ ФАЙЛА DOCX
@@ -319,12 +319,12 @@ class FileLoadController extends Controller
         $templateProcessor->setValue('difficulty_level', $validate['difficulty_level']);
         $templateProcessor->setValue('max_score', $validate['max_score']);
 
-        $templateProcessor->setValue('user_name', auth()->user()->first_name ." ". auth()->user()->last_name ." ". auth()->user()->patronymic);
+        $templateProcessor->setValue('user_name', auth()->user()->first_name . " " . auth()->user()->last_name . " " . auth()->user()->patronymic);
         $templateProcessor->setValue('second_name', auth()->user()->last_name);
         $templateProcessor->setValue('first_name_reduction', substr(auth()->user()->first_name, 0, 1));
         $templateProcessor->setValue('patronymic_reduction', substr(auth()->user()->patronymic, 0, 1));
 
-        $templateProcessor->setValue('now_date', date('d').$month[date('m')].date('Y'));
+        $templateProcessor->setValue('now_date', date('d') . $month[date('m')] . date('Y'));
 
         ##заполнение таблицы
         $templateProcessor->cloneRow('section', $bank->sections->count());
@@ -340,7 +340,7 @@ class FileLoadController extends Controller
                 $section_num = '';
                 if ($i == 1) {
                     $section_val = $section['name'];
-                    $section_num = $key.'.';
+                    $section_num = $key . '.';
                 }
 
                 $questions_type = $category->with([
@@ -369,7 +369,7 @@ class FileLoadController extends Controller
             return $section->categories()->get()
                 ->map(function ($category) {
                     return $category->questions()->get()
-                        ->map(function ($question){
+                        ->map(function ($question) {
                             return $question->type_question->question_group;
                         });
                 });

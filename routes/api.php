@@ -3,6 +3,7 @@
 use App\Http\Controllers\BankController;
 use App\Http\Controllers\DisciplineController;
 use App\Http\Controllers\FileLoadController;
+use App\Http\Controllers\PassTestController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserTestController;
 use \App\Http\Controllers\SectionController;
@@ -61,11 +62,14 @@ Route::middleware(['api', 'auth:sanctum'])->group(function () {
         Route::get('/checkVerifyEmail', [UserController::class, 'checkVerifyEmail']);
 
         Route::group(['prefix' => 'test'], function () {
-            Route::post('/create', [UserTestController::class, 'create']);
-            Route::post('/statistic', [UserTestController::class, 'statistic']);
-            Route::post('/userTest', [UserTestController::class, 'userTest']);
+            Route::post('/create/{bank}', [UserTestController::class, 'create']);
+            Route::get('/show', [UserTestController::class, 'show']);
+            Route::patch('/update/{userTest}', [UserTestController::class, 'update']);
+            Route::delete('/delete/{userTest}', [UserTestController::class, 'delete']);
+            Route::get('/completed/{userTest}', [UserTestController::class, 'completed']);
         });
     });
+
 
     Route::group(['prefix' => 'discipline'], function () {
         Route::post('/create', [DisciplineController::class, 'create']);
@@ -113,8 +117,14 @@ Route::middleware(['api', 'auth:sanctum'])->group(function () {
     });
 
     Route::group(['prefix' => 'files'], function () {
-        Route::post('/unloadingBank/bank/{bank}', [FileLoadController::class, 'unloadingBank']);
+        Route::get('/unloadingBank/bank/{bank}', [FileLoadController::class, 'unloadingBank']);
         Route::post('/loadingBank', [FileLoadController::class, 'loadingBank']);
         Route::post('/passport/{bank}', [FileLoadController::class, 'passport']);
     });
+
+});
+
+Route::group(['prefix' => 'test'], function () {
+    Route::get('/start/{userTest}', [PassTestController::class, 'start']);
+    Route::post('/end/{userTest}', [PassTestController::class, 'end']);
 });

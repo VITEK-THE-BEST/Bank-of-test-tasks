@@ -25,7 +25,6 @@ class UserTestController extends Controller
      */
     public function create(Request $request, Bank $bank)
     {
-        $bank->
         $validate = $request->validate([
             'name' => 'required',
             'start_testing' => 'required',

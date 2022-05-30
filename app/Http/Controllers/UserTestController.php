@@ -25,12 +25,13 @@ class UserTestController extends Controller
      */
     public function create(Request $request, Bank $bank)
     {
+        $bank->
         $validate = $request->validate([
             'name' => 'required',
-            'time_testing' => 'sometimes',
             'start_testing' => 'required',
             'end_testing' => 'required',
         ]);
+
         $validate['bank_id'] = $bank->id;
         $validate['user_id'] = auth()->id();
 
@@ -39,17 +40,10 @@ class UserTestController extends Controller
         $query_questions = [];
 
         //получение всех значений FIXME:передалть бы этот кал
-        $bank = Bank::query()->find(1);
-        $bank = $bank
-            ->with(['sections.categories.questions'])
-            ->find($bank->id);
-
+        $bank = Bank::query()->with(['sections.categories.questions'])->find($bank->id);
         //фильтрация вопросов FIXME:передалть бы этот кал
         $questions = $bank['sections']
-            ->pluck('categories')
-            ->flatten()
-            ->pluck('questions')
-            ->flatten();
+            ->pluck('categories.*.questions')->flatten();
 
         foreach ($questions as $question) {
             array_push($query_questions, new TestQuestion([

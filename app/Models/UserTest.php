@@ -48,6 +48,7 @@ class UserTest extends Model
         'user_id',
         'bank_id',
         'time_testing',
+        'name',
         'start_testing',
         'end_testing'
     ];

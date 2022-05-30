@@ -39,6 +39,7 @@ class PassTestController extends Controller
                         'opinions',
                     ])
                     ->get();
+//                TODO: зарандомить вывод вариантов ответов
                 return response()->json($questions);
             }
             return response()->json(['error' => 'тестирование окончено'], 403);

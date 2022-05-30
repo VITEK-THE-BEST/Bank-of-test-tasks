@@ -21,7 +21,7 @@ return new class extends Migration
 
             $table->float("assessment",5);
             $table->json("result");
-            $table->date("end_testing")->nullable();
+            $table->dateTime("end_testing")->nullable();
         });
     }
 

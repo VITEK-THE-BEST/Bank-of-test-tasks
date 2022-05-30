@@ -24,8 +24,8 @@ return new class extends Migration
 
             $table->string("name");
             $table->integer("time_testing")->nullable();
-            $table->date("start_testing");
-            $table->date("end_testing");
+            $table->dateTime("start_testing")->default('2000-01-01');
+            $table->dateTime("end_testing")->default('2099-01-01');
 
         });
     }

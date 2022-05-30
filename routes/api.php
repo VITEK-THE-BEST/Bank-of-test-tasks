@@ -66,6 +66,7 @@ Route::middleware(['api', 'auth:sanctum'])->group(function () {
             Route::get('/show', [UserTestController::class, 'show']);
             Route::patch('/update/{userTest}', [UserTestController::class, 'update']);
             Route::delete('/delete/{userTest}', [UserTestController::class, 'delete']);
+            Route::get('/completed/{userTest}', [UserTestController::class, 'completed']);
         });
     });
 
@@ -116,7 +117,7 @@ Route::middleware(['api', 'auth:sanctum'])->group(function () {
     });
 
     Route::group(['prefix' => 'files'], function () {
-        Route::post('/unloadingBank/bank/{bank}', [FileLoadController::class, 'unloadingBank']);
+        Route::get('/unloadingBank/bank/{bank}', [FileLoadController::class, 'unloadingBank']);
         Route::post('/loadingBank', [FileLoadController::class, 'loadingBank']);
         Route::post('/passport/{bank}', [FileLoadController::class, 'passport']);
     });

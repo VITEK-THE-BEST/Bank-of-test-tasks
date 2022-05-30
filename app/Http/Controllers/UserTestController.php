@@ -20,15 +20,19 @@ class UserTestController extends Controller
     /**
      * Отправить банк на тестирование
      *
+     *
+     * Если не задать начало и конец тестирования, будет доступен для прохождения сразу после начала
+     *
      * ВНИМАНИЕ ВОПРОСЫ ИЗ БАНКА ДОБАВЯТСЯ В ОТДЕЛЬНУЮ ТАБЛИЦУ И ИЗМЕНИТЬ ИХ УЖЕ НЕ БУДЕТ ВОЗМОЖНОСТИ ТОЛЬКО УДАЛИТЬ ТЕСТ
+     *
      *
      */
     public function create(Request $request, Bank $bank)
     {
         $validate = $request->validate([
             'name' => 'required',
-            'start_testing' => 'required',
-            'end_testing' => 'required',
+            'start_testing' => 'sometimes',
+            'end_testing' => 'sometimes',
         ]);
 
         $validate['bank_id'] = $bank->id;
@@ -80,7 +84,7 @@ class UserTestController extends Controller
     public function update(Request $request, UserTest $userTest)
     {
         $validate = $request->validate([
-            'time_testing' => 'sometimes',
+            'name' => 'sometimes',
             'start_testing' => 'sometimes',
             'end_testing' => 'sometimes',
         ]);
@@ -97,6 +101,24 @@ class UserTestController extends Controller
     {
         $userTest->delete();
         return response()->json([]);
+    }
+
+    /**
+     * пройденные тестирования
+     *
+     * */
+    public function completed(UserTest $userTest)
+    {
+        $results = $userTest
+            ->passed_tests()
+            ->select([
+                'id',
+                'user_test_id',
+                'assessment',
+                'end_testing',
+            ])
+            ->get();
+        return response()->json($results);
     }
 
 }

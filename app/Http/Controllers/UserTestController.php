@@ -39,11 +39,13 @@ class UserTestController extends Controller
 
         $query_questions = [];
 
-        //получение всех значений FIXME:передалть бы этот кал
-        $bank = Bank::query()->with(['sections.categories.questions'])->find($bank->id);
-        //фильтрация вопросов FIXME:передалть бы этот кал
+        $bank = Bank::query()
+            ->with(['sections.categories.questions'])
+            ->find($bank->id);
+
         $questions = $bank['sections']
-            ->pluck('categories.*.questions')->flatten();
+            ->pluck('categories.*.questions')
+            ->flatten();
 
         foreach ($questions as $question) {
             array_push($query_questions, new TestQuestion([

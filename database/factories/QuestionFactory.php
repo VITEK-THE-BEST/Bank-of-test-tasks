@@ -44,10 +44,12 @@ class QuestionFactory extends Factory
                         'opinions' => [
                             [
                                 "id" => 1,
+                                "check"=>false,
                                 "opinion" => "8"
                             ],
                             [
                                 "id" => 2,
+                                "check"=>true,
                                 "opinion" => "4"
                             ],
                         ],

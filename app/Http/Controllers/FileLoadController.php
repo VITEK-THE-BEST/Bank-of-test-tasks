@@ -314,6 +314,7 @@ class FileLoadController extends Controller
 
         $templateProcessor->setValue('scope_btz', $validate['scope_btz']);
         $templateProcessor->setValue('btz_name', $bank->name);
+        //FIXME:ДОБАВИТЬ ПОДСЧЕТ КОЛЛИЧЕСТВА ВОПРОСОВ
         $templateProcessor->setValue('count_questions', "11111111111111111111111111");
         $templateProcessor->setValue('time_testing', $validate['time_testing']);
         $templateProcessor->setValue('difficulty_level', $validate['difficulty_level']);

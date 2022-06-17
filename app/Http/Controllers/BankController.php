@@ -20,6 +20,7 @@ class BankController extends Controller
     {
         $validate = $request->validate([
             'name' => 'required|string',
+            'credits' => 'required|string',
             'start_testing' => 'sometimes|date',
             'end_testing' => 'sometimes|date',
         ]);
@@ -57,33 +58,100 @@ class BankController extends Controller
     /**
      * Банки пользователя для  выгрузки
      *
-     * получить банки авторизированного пользователя c колличеством категорий, разделов, вопросов
-     * ИСПОЛЬЗОВАТЬ ТОЛЬКО НА ВЫГРУЗКУ, ЗАПРОС ПИЗДЕЦ БОЛЬШОЙ
+     * получить банки авторизированного пользователя c колличеством типов вопросов по зачетным единицам
+     *
+     *
+     * закрытой формы  – не более 70%;
+     *
+     * открытой формы  не менее 5%;
+     *
+     * установление соответствия  не менее 5%;
+     *
+     * на установление правильной последовательности  – на усмотрение разработчика БТЗ.
+     *
      */
     public function showUnload()
     {
         $user = auth()->user();
 
+
         $banks = $user->banks
             ->map(function ($bank) {
-                //колличество разделов
-                $sections = $bank->sections()->get();
-                $bank['count_sections'] = $sections->count();
 
-                //колличество категорий
-                $bank['count_categories'] = $sections
-                    ->map(function ($section) {
-                        return $section->categories()->get()->count();
-                    })->sum();
+                $minCountQuestions = match ($bank['credits']) {
+                    2 => 100,
+                    3 => 150,
+                    4 => 200,
+                    default => 250,
+                };
 
-                //колличество вопросов
-                $bank['count_questions'] = $bank->sections()->get()
+                $bank['min_count_questions'] = $minCountQuestions;
+                $questions_types = $bank->sections()->get()
                     ->map(function ($section) {
                         return $section->categories()->get()
                             ->map(function ($category) {
-                                return $category->questions()->get()->count();
-                            })->sum();
-                    })->sum();
+                                return $category->questions()->get()
+                                    ->map(function ($question) {
+                                        return $question->type_question()->get()
+                                            ->map(function ($type_question) {
+                                                return $type_question->question_group()->get();
+                                            });
+                                    });
+
+                            });
+                    });
+
+                $questions_types = $questions_types->flatten()->countBy('id');
+                //добавить пустое значение
+                foreach (['1','2','3','4'] as $value){
+                    if (!$questions_types->has($value)) {
+                        $questions_types[$value] = 0;
+                    }
+                }
+
+                $count_questions = $questions_types->sum();
+                $bank['count_questions'] = $count_questions;
+
+                $question_table = [];
+
+                //открытых не менее 5%
+                $min = ($count_questions * 5) / 100;
+                $result = ($questions_types['1'] * 100) / $min;
+
+                array_push($question_table, [
+                    "name"=>"Открытых",
+                    "min" => 5,
+                    'result' => $result
+                ]);
+
+                //закрытой формы не более 70%
+                $min = ($count_questions * 70) / 100;
+                $result = ($questions_types['2'] * 100) / $min;
+
+                array_push($question_table, [
+                    "name"=>"Закрытых",
+                    "max" => 70,
+                    'result' => $result
+                ]);
+
+                //соответствие не менее 5%
+                $min = ($count_questions * 5) / 100;
+                $result = ($questions_types['3'] * 100) / $min;
+
+                array_push($question_table, [
+                    "name"=>"На соответсвие",
+                    "min" => 5,
+                    'result' => $result
+                ]);
+
+                //упорядочивание на усмотрение разработчика БТЗ
+                array_push($question_table, [
+                    "name"=>"На упрорядочивание",
+                    "min" => 0,
+                    'result' => ($questions_types['3'] * 100) / $count_questions
+                ]);
+
+                $bank['question_table'] = $question_table;
 
                 return $bank;
             });
@@ -126,6 +194,7 @@ class BankController extends Controller
     {
         $validate = $request->validate([
             'name' => 'sometimes|string',
+            'credits' => 'sometimes|string',
             'start_testing' => 'sometimes|date',
             'end_testing' => 'sometimes|date',
         ]);

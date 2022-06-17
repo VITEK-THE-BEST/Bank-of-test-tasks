@@ -116,7 +116,7 @@ class FileLoadController extends Controller
 
         return response()->streamDownload(function () use ($giftFile) {
             echo implode('', $giftFile);
-        }, 'laravel-readme.txt', $headers);
+        }, 'test.txt', $headers);
     }
 
     /**

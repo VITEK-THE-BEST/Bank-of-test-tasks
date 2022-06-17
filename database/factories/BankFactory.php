@@ -20,6 +20,7 @@ class BankFactory extends Factory
         return [
             'user_id'=>User::query()->inRandomOrder()->first()->value('id'),
             'name'=>$this->faker->company(),
+            'credits'=>$this->faker->numberBetween(1,5),
             'start_testing'=>$this->faker->date(),
             'end_testing'=>$this->faker->date(),
 

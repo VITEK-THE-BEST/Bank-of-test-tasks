@@ -20,6 +20,7 @@ return new class extends Migration
             $table->foreign('user_id')->references('id')->on('users')->cascadeOnDelete();
 
             $table->string("name");
+            $table->integer("credits");
             $table->date("start_testing")->nullable();
             $table->date("end_testing")->nullable();
         });

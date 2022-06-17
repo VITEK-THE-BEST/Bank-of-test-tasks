@@ -11,35 +11,8 @@ use \App\Http\Controllers\QuestionController;
 use \App\Http\Controllers\CategoryController;
 use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
-|
-*/
 
-/**
- * @unauthenticated
- */
-Route::post('/resend/email/token', [UserController::class, 'resendPin'])
-    ->name('resendPin');
 
-/**
- * @unauthenticated
- */
-Route::get('/email/{token}/verify/{user}', [UserController::class, 'verifyEmail'])
-    ->name('verifyEmail');
-
-//Route::middleware('auth:sanctum')->group(function () {
-//
-//    Route::middleware('verify.api')->group(function () {
-//        Route::delete('/dropToken', [UserController::class, 'dropToken']);
-//    });
-//});
 
 /**
  * @unauthenticated
@@ -59,7 +32,6 @@ Route::middleware(['api', 'auth:sanctum'])->group(function () {
         Route::delete('/dropToken', [UserController::class, 'dropToken']);
         Route::patch('/update', [UserController::class, 'update']);
         Route::delete('/delete/{id}', [UserController::class, 'delete']);
-        Route::get('/checkVerifyEmail', [UserController::class, 'checkVerifyEmail']);
 
         Route::group(['prefix' => 'test'], function () {
             Route::post('/create/{bank}', [UserTestController::class, 'create']);

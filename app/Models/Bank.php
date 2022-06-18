@@ -49,6 +49,7 @@ class Bank extends Model
 		'user_id',
 		'discipline_id',
 		'name',
+		'credits',
 		'start_testing',
 		'end_testing'
 	];

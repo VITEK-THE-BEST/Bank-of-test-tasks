@@ -310,12 +310,27 @@ class FileLoadController extends Controller
         ]);
 
         $month = ['01' => 'Январь', '02' => 'Февраль', '03' => 'Март', '04' => 'Апреля', '05' => 'Май', '06' => 'Июнь', '07' => 'Июль', '08' => 'Август', '09' => 'Сентябрь', '10' => 'Октябрь', '11' => 'Ноябрь', '12' => 'Декабрь'];
-        $templateProcessor = new TemplateProcessor('../storage/resourse/passport_template.docx');
+        $templateProcessor = new TemplateProcessor('../storage/resourse/passport_template_new.docx');
+
+        $bank_help = $bank->with(
+            "sections"
+        )->find($bank->id);
+
+        $bank_help['sections'] = $bank_help['sections']->map(function ($section) {
+            $section['count_questions'] = $section->categories()->get()
+                ->map(function ($category) {
+                    return $category->questions()->get()->count();
+                })->sum();
+            return $section;
+        });
+
+
 
         $templateProcessor->setValue('scope_btz', $validate['scope_btz']);
         $templateProcessor->setValue('btz_name', $bank->name);
+        $templateProcessor->setValue('credits', $bank->credits);
         //FIXME:ДОБАВИТЬ ПОДСЧЕТ КОЛЛИЧЕСТВА ВОПРОСОВ
-        $templateProcessor->setValue('count_questions', "11111111111111111111111111");
+        $templateProcessor->setValue('count_questions', $bank_help['sections']->pluck('count_questions')->sum());
         $templateProcessor->setValue('time_testing', $validate['time_testing']);
         $templateProcessor->setValue('difficulty_level', $validate['difficulty_level']);
         $templateProcessor->setValue('max_score', $validate['max_score']);

@@ -38,13 +38,16 @@ class ExampleTest extends TestCase
         $response = $this->withHeaders([
             'Authorization' => 'Bearer ' . $token,
         ])->post('/api/bank/create', [
-            'name' => $faker
+            'name' => $faker,
+            'credits' => 2
         ]);
+        dd($response);
 
         $response->assertOk();
         $response->assertJsonFragment(['name' => $faker]);
         $this->assertDatabaseHas('banks', [
             'name' => $faker,
+            'credits' => 2
         ]);
 
 

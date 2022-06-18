@@ -20,7 +20,7 @@ class BankController extends Controller
     {
         $validate = $request->validate([
             'name' => 'required|string',
-            'credits' => 'required|string',
+            'credits' => 'required',
             'start_testing' => 'sometimes|date',
             'end_testing' => 'sometimes|date',
         ]);
@@ -103,7 +103,7 @@ class BankController extends Controller
 
                 $questions_types = $questions_types->flatten()->countBy('id');
                 //добавить пустое значение
-                foreach (['1','2','3','4'] as $value){
+                foreach (['1', '2', '3', '4'] as $value) {
                     if (!$questions_types->has($value)) {
                         $questions_types[$value] = 0;
                     }
@@ -119,7 +119,7 @@ class BankController extends Controller
                 $result = ($questions_types['1'] * 100) / $min;
 
                 array_push($question_table, [
-                    "name"=>"Открытых",
+                    "name" => "Открытых",
                     "min" => 5,
                     'result' => $result
                 ]);
@@ -129,7 +129,7 @@ class BankController extends Controller
                 $result = ($questions_types['2'] * 100) / $min;
 
                 array_push($question_table, [
-                    "name"=>"Закрытых",
+                    "name" => "Закрытых",
                     "max" => 70,
                     'result' => $result
                 ]);
@@ -139,14 +139,14 @@ class BankController extends Controller
                 $result = ($questions_types['3'] * 100) / $min;
 
                 array_push($question_table, [
-                    "name"=>"На соответсвие",
+                    "name" => "На соответсвие",
                     "min" => 5,
                     'result' => $result
                 ]);
 
                 //упорядочивание на усмотрение разработчика БТЗ
                 array_push($question_table, [
-                    "name"=>"На упрорядочивание",
+                    "name" => "На упрорядочивание",
                     "min" => 0,
                     'result' => ($questions_types['3'] * 100) / $count_questions
                 ]);

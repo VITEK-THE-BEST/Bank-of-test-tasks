@@ -33,23 +33,23 @@ Route::middleware(['api', 'auth:sanctum'])->group(function () {
         Route::patch('/update', [UserController::class, 'update']);
         Route::delete('/delete/{id}', [UserController::class, 'delete']);
 
-        Route::group(['prefix' => 'test'], function () {
-            Route::post('/create/{bank}', [UserTestController::class, 'create']);
-            Route::get('/show', [UserTestController::class, 'show']);
-            Route::patch('/update/{userTest}', [UserTestController::class, 'update']);
-            Route::delete('/delete/{userTest}', [UserTestController::class, 'delete']);
-            Route::get('/completed/{userTest}', [UserTestController::class, 'completed']);
-        });
+//        Route::group(['prefix' => 'test'], function () {
+//            Route::post('/create/{bank}', [UserTestController::class, 'create']);
+//            Route::get('/show', [UserTestController::class, 'show']);
+//            Route::patch('/update/{userTest}', [UserTestController::class, 'update']);
+//            Route::delete('/delete/{userTest}', [UserTestController::class, 'delete']);
+//            Route::get('/completed/{userTest}', [UserTestController::class, 'completed']);
+//        });
     });
 
 
-    Route::group(['prefix' => 'discipline'], function () {
-        Route::post('/create', [DisciplineController::class, 'create']);
-        Route::post('/addUsers/{id}', [DisciplineController::class, 'addUsers']);
-        Route::get('/addBank/{discipline}/bank/{bank}', [DisciplineController::class, 'addBank']);
-        Route::delete('/delete/{id}', [DisciplineController::class, 'delete']);
-        Route::put('/update/{id}', [DisciplineController::class, 'update']);
-    });
+//    Route::group(['prefix' => 'discipline'], function () {
+//        Route::post('/create', [DisciplineController::class, 'create']);
+//        Route::post('/addUsers/{id}', [DisciplineController::class, 'addUsers']);
+//        Route::get('/addBank/{discipline}/bank/{bank}', [DisciplineController::class, 'addBank']);
+//        Route::delete('/delete/{id}', [DisciplineController::class, 'delete']);
+//        Route::put('/update/{id}', [DisciplineController::class, 'update']);
+//    });
 
     Route::group(['prefix' => 'bank'], function () {
         Route::post('/create', [BankController::class, 'create']);
@@ -96,7 +96,7 @@ Route::middleware(['api', 'auth:sanctum'])->group(function () {
 
 });
 
-Route::group(['prefix' => 'test'], function () {
-    Route::get('/start/{userTest}', [PassTestController::class, 'start']);
-    Route::post('/end/{userTest}', [PassTestController::class, 'end']);
-});
+//Route::group(['prefix' => 'test'], function () {
+//    Route::get('/start/{userTest}', [PassTestController::class, 'start']);
+//    Route::post('/end/{userTest}', [PassTestController::class, 'end']);
+//});

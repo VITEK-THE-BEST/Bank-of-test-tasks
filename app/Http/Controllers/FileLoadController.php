@@ -325,7 +325,6 @@ class FileLoadController extends Controller
         });
 
 
-
         $templateProcessor->setValue('scope_btz', $validate['scope_btz']);
         $templateProcessor->setValue('btz_name', $bank->name);
         $templateProcessor->setValue('credits', $bank->credits);

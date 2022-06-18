@@ -130,8 +130,8 @@ class SectionController extends Controller
      */
     public function showCategory(Section $section)
     {
-        $section =  $section->categories()->get()
-            ->map(function ($category){
+        $section = $section->categories()->get()
+            ->map(function ($category) {
                 $category['count_questions'] = $category->questions()->get()->count();
                 return $category;
             });

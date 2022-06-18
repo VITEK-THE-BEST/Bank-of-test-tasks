@@ -4,198 +4,71 @@ namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
+use Illuminate\Support\Str;
+use Tests\TestCase;use Faker\Provider\ru_RU as Faker;
+
 
 class BankTest extends TestCase
 {
     /**
-     * A basic feature test example.
+     * A basic test example.
      *
      * @return void
      */
-    public function test_example()
+    public function test_the_application_returns_a_successful_response()
     {
         $response = $this->get('/');
 
         $response->assertStatus(200);
     }
-
-    public function t1est_example()
+    /**
+     * тестирование создания банка.
+     *
+     * @return void
+     */
+    public function testCreate()
     {
-        $response = $this->get('/');
+        $token = $this->getUserToken();
 
-        $response->assertStatus(200);
+        $faker = Faker\Company::companyNameElement();
+
+        $response = $this->withHeaders([
+            'Authorization' => 'Bearer ' . $token,
+        ])->post('/api/bank/create', [
+            'name' => $faker,
+            'credits' => 2
+        ]);
+
+        $response->assertOk();
+        $response->assertJsonFragment(['name' => $faker]);
+        $this->assertDatabaseHas('banks', [
+            'name' => $faker,
+            'credits' => 2
+        ]);
+
+
+        //валидация
+        $response = $this->withHeaders([
+            'Authorization' => 'Bearer ' . $token,
+        ])->post('/api/bank/create', [
+        ]);
+        $this->assertEquals(302, $response->status());
     }
 
-    public function test_d12example()
+    public function getUserToken()
     {
-        $response = $this->get('/');
+        $email = STR::random(30) . '@gmail.com';
+        $pwd = STR::random(30);
 
-        $response->assertStatus(200);
+        $response = $this->post('api/registration',[
+            'first_name' => Faker\Person::firstNameFemale(),
+            'last_name' => Faker\Person::firstNameFemale(),
+            'patronymic' => Faker\Person::firstNameFemale(),
+            'email' => $email,
+            'password' => $pwd,
+        ]);
+
+
+        return $response['token'];
     }
-
-    public function testd12_example()
-    {
-        $response = $this->get('/');
-
-        $response->assertStatus(200);
-    }
-
-    public function test_e12d12dxample()
-    {
-        $response = $this->get('/');
-
-        $response->assertStatus(200);
-    }
-
-    public function test_12d1dawdexample()
-    {
-        $response = $this->get('/');
-
-        $response->assertStatus(200);
-    }
-
-    public function test_exawdawdawample()
-    {
-        $response = $this->get('/');
-
-        $response->assertStatus(200);
-    }
-
-    public function test_eawdawdxample()
-    {
-        $response = $this->get('/');
-
-        $response->assertStatus(200);
-    }
-
-    public function test_eawdawdawxample()
-    {
-        $response = $this->get('/');
-
-        $response->assertStatus(200);
-    }
-
-    public function test_exzczxczxxample()
-    {
-        $response = $this->get('/');
-
-        $response->assertStatus(200);
-    }
-
-    public function taest_example()
-    {
-        $response = $this->get('/');
-
-        $response->assertStatus(200);
-    }
-
-    public function test_exampawdawdle()
-    {
-        $response = $this->get('/');
-
-        $response->assertStatus(200);
-    }
-
-    public function test_exaawdawdawmpawdawdle()
-    {
-        $response = $this->get('/');
-
-        $response->assertStatus(200);
-    }
-
-    public function tawdawdest_example()
-    {
-        $response = $this->get('/');
-
-        $response->assertStatus(200);
-    }
-
-    public function teawdawdst_example()
-    {
-        $response = $this->get('/');
-
-        $response->assertStatus(200);
-    }
-
-    public function test_examawdawdple()
-    {
-        $response = $this->get('/');
-
-        $response->assertStatus(200);
-    }
-
-    public function test_examawdawdzzzple()
-    {
-        $response = $this->get('/');
-
-        $response->assertStatus(200);
-    }
-
-    public function test_examazscwdawdple()
-    {
-        $response = $this->get('/');
-
-        $response->assertStatus(200);
-    }
-
-    public function tesawdawdt_example()
-    {
-        $response = $this->get('/');
-
-        $response->assertStatus(200);
-    }
-
-    public function test_exzzzzzzample()
-    {
-        $response = $this->get('/');
-
-        $response->assertStatus(200);
-    }
-
-    public function test_zzzzzexample()
-    {
-        $response = $this->get('/');
-
-        $response->assertStatus(200);
-    }
-
-    public function test_examplzzze()
-    {
-        $response = $this->get('/');
-
-        $response->assertStatus(200);
-    }
-
-    public function test_exampzzzzle()
-    {
-        $response = $this->get('/');
-
-        $response->assertStatus(200);
-    }
-
-    public function teswdawdawdawt_aawdawdaexamplzzze()
-    {
-        $response = $this->get('/');
-
-        $response->assertStatus(200);
-    }
-
-    public function test_exampzzzle()
-    {
-        $response = $this->get('/');
-
-        $response->assertStatus(200);
-    }
-
-    public function testawdawdawd_exampzzzle()
-    {
-        $response = $this->get('/');
-
-        $response->assertStatus(200);
-    }
-
-
-
-
 }

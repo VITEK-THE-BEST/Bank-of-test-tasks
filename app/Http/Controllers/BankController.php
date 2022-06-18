@@ -115,40 +115,45 @@ class BankController extends Controller
                 $question_table = [];
 
                 //открытых не менее 5%
-                $min = ($count_questions * 5) / 100;
-                $result = ($questions_types['1'] * 100) / $min;
+                $min = match ($count_questions != 0) {
+                    true => round(($count_questions * 5) / 100),
+                    default => 0,
+                };
 
                 array_push($question_table, [
                     "name" => "Открытых",
-                    "min" => 5,
-                    'result' => $result
+                    "min_count" => $min,
+                    'count_questions' => $questions_types['1']
                 ]);
 
                 //закрытой формы не более 70%
-                $min = ($count_questions * 70) / 100;
-                $result = ($questions_types['2'] * 100) / $min;
+                $min = match ($count_questions != 0) {
+                    true => round(($count_questions * 70) / 100),
+                    default => 0,
+                };
 
                 array_push($question_table, [
                     "name" => "Закрытых",
-                    "max" => 70,
-                    'result' => $result
+                    "max_count" => $min,
+                    'count_questions' => $questions_types['2']
                 ]);
 
                 //соответствие не менее 5%
-                $min = ($count_questions * 5) / 100;
-                $result = ($questions_types['3'] * 100) / $min;
-
+                $min = match ($count_questions != 0) {
+                    true => round(($count_questions * 5) / 100),
+                    default => 0,
+                };
                 array_push($question_table, [
                     "name" => "На соответсвие",
-                    "min" => 5,
-                    'result' => $result
+                    "min_count" => $min,
+                    'count_questions' => $questions_types['3']
                 ]);
 
                 //упорядочивание на усмотрение разработчика БТЗ
                 array_push($question_table, [
                     "name" => "На упрорядочивание",
-                    "min" => 0,
-                    'result' => ($questions_types['3'] * 100) / $count_questions
+                    "min_count" => 0,
+                    'count_questions' => $questions_types['4']
                 ]);
 
                 $bank['question_table'] = $question_table;

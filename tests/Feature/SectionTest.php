@@ -13,7 +13,7 @@ class SectionTest extends TestCase
      *
      * @return void
      */
-    public function test_example()
+    public function test_SectionsController()
     {
         $response = $this->get('/');
 

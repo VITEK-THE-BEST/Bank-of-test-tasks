@@ -13,7 +13,7 @@ class LoadingFilesTest extends TestCase
      *
      * @return void
      */
-    public function test_example()
+    public function test_LoadingController()
     {
         $response = $this->get('/');
 

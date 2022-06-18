@@ -41,7 +41,6 @@ class ExampleTest extends TestCase
             'name' => $faker,
             'credits' => 2
         ]);
-        dd($response);
 
         $response->assertOk();
         $response->assertJsonFragment(['name' => $faker]);

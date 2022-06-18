@@ -26,9 +26,9 @@ class TestDataSeeder extends Seeder
                     Section::factory(5)
                         ->hasAttached(
                             Category::factory(5)
-                                ->has(
-                                    Question::factory(16)->typeQuestion()
-                                )
+//                                ->has(
+//                                    Question::factory(16)->typeQuestion()
+//                                )
                         )
                 )
         )->create([

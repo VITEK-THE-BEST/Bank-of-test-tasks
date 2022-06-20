@@ -7,6 +7,8 @@ use App\Models\Bank;
 use App\Models\Category;
 use App\Models\Question;
 use App\Models\Section;
+use Error;
+use ErrorException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use PhpOffice\PhpWord\TemplateProcessor;
@@ -280,7 +282,17 @@ class FileLoadController extends Controller
                     $answer_arr = [];
                     $question_text = str_replace('_____', '@@', $question_text);
 
-                    array_push($answer_arr, $question_obj['answer']['text']);
+                    // FIXME, КОГДА ОБЬЕКТ МЕЕТ НЕСКОЛЬКО ВАРИАНТОВ ЗНАЧЕНИЯ НАОДЯТСЯ В МАССИВЕ
+
+                    if (array_key_exists('text', $question_obj['answer'])) {
+                        array_push($answer_arr, $question_obj['answer']['text']);
+
+                    }else{
+                        foreach ($question_obj['answer'] as $val){
+                            array_push($answer_arr, $val['text']);
+
+                        }
+                    }
 
                     array_push($query_questions, new Question([
                         'type_question_id' => 2,

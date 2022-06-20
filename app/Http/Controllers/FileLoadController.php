@@ -19,6 +19,15 @@ use PhpOffice\PhpWord\TemplateProcessor;
  */
 class FileLoadController extends Controller
 {
+    private function replace_symbol($correct_str): array|string
+    {
+        $symbols_replace = ["\\", "{", "}"];
+        foreach ($symbols_replace as $symbol) {
+            $correct_str = str_replace($symbol, '\\' . $symbol, $correct_str);
+        }
+        return $correct_str;
+    }
+
     /**
      * Выгрузка банка
      *
@@ -28,7 +37,6 @@ class FileLoadController extends Controller
     {
         $bankName = '$CATEGORY: ' . $bank['name'] . '/';
         $giftFile = [];
-//        $symbols_replace = ["\\", "{", "}"];
 
 
         foreach ($bank->sections as $section) {
@@ -37,10 +45,8 @@ class FileLoadController extends Controller
                 array_push($giftFile, $CATEGORY_NAME . PHP_EOL . PHP_EOL);
 
                 foreach ($category->questions as $question) {
-//                    foreach ($symbols_replace as $symbol) {
-//                        $question['question'] = str_replace($symbol, '\\' . $symbol, $question['question']);
-//                    }
-                    preg_quote($question['question']);
+
+                    $this->replace_symbol($question['question']);
 
                     switch ($question['type_question_id']) {
 
@@ -49,9 +55,9 @@ class FileLoadController extends Controller
 
                             foreach ($question['opinions'] as $opinion) {
                                 if ($opinion['id'] == $question['answer'][0]) {
-                                    array_push($giftFile, "=" . preg_quote($opinion['opinion']) . PHP_EOL);
+                                    array_push($giftFile, "=" . $this->replace_symbol($opinion['opinion']) . PHP_EOL);
                                 } else {
-                                    array_push($giftFile, "~" . preg_quote($opinion['opinion']) . PHP_EOL);
+                                    array_push($giftFile, "~" . $this->replace_symbol($opinion['opinion']) . PHP_EOL);
                                 }
                             }
 
@@ -67,7 +73,7 @@ class FileLoadController extends Controller
                             $answer_val = '';
 
                             foreach ($question['answer'] as $answer) {
-                                $answer_val = $answer_val . "=%100%" . preg_quote($answer) . "# ";
+                                $answer_val = $answer_val . "=%100%" . $this->replace_symbol($answer) . "# ";
                             }
                             $question['question'] = str_replace("@@", "{ " . $answer_val . " }", $question['question']);
 
@@ -78,7 +84,7 @@ class FileLoadController extends Controller
                             foreach ($question['answer'] as $answer) {
                                 foreach ($question['opinions'][0]['opinions'] as $opinion_opinion) {
                                     if ($opinion_opinion['id'] == $answer['id_opinion']) {
-                                        $question_opinion = preg_quote($opinion_opinion['opinion']);
+                                        $question_opinion = $this->replace_symbol($opinion_opinion['opinion']);
                                         break;
                                     }
                                 }
@@ -97,7 +103,7 @@ class FileLoadController extends Controller
                             foreach ($question['answer'] as $answer) {
                                 foreach ($question['opinions'] as $opinion) {
                                     if ($opinion['id'] == $answer) {
-                                        array_push($giftFile, preg_quote($opinion['opinion']) . PHP_EOL);
+                                        array_push($giftFile, $this->replace_symbol($opinion['opinion']) . PHP_EOL);
                                         break;
                                     }
 

@@ -156,6 +156,7 @@ class FileLoadController extends Controller
                     if ($name_categories[2] != $bank_name) {
                         $bank = Bank::query()->create([
                             "name" => $name_categories[2],
+                            "credits" => 2,
                             'user_id' => auth()->id(),
 //                            'start_testing' => '00.00.00',
 //                            'end_testing' => '00.00.00'

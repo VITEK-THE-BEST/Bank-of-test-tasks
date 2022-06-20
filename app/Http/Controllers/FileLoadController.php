@@ -282,7 +282,6 @@ class FileLoadController extends Controller
                     $answer_arr = [];
                     $question_text = str_replace('_____', '@@', $question_text);
 
-                    // FIXME, КОГДА ОБЬЕКТ МЕЕТ НЕСКОЛЬКО ВАРИАНТОВ ЗНАЧЕНИЯ НАОДЯТСЯ В МАССИВЕ
 
                     if (array_key_exists('text', $question_obj['answer'])) {
                         array_push($answer_arr, $question_obj['answer']['text']);

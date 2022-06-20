@@ -46,7 +46,7 @@ class FileLoadController extends Controller
 
                 foreach ($category->questions as $question) {
 
-                    $this->replace_symbol($question['question']);
+                    $question['question'] = $this->replace_symbol($question['question']);
 
                     switch ($question['type_question_id']) {
 
